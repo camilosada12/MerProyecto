@@ -2,16 +2,11 @@
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities.Exceptions;
 
 namespace Business
 {
-    class RolFormPermissionBusiness
+    public class RolFormPermissionBusiness
     {
         private readonly RolFormPermissionData _RolFormPermissionData;
         private readonly ILogger _logger;
@@ -67,7 +62,7 @@ namespace Business
         }
 
         // Atributo para crear un RolFormPermission desde un DTO
-        public async Task<RolFormPermissionDto> CreateAsync(RolFormPermissionDto RolFormPermissionDto)
+        public async Task<RolFormPermissionDto> CreateRolFormPermissionAsync(RolFormPermissionDto RolFormPermissionDto)
         {
             try
             {

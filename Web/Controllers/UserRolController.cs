@@ -3,29 +3,30 @@ using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
 
-namespace Web.ContUserlers
+namespace Web.Controllers
 {
     /// <summary>
-    /// ContUserador para la gestion de permisos en el sistema
+    /// ContUserRolador para gestion de permisos en el sistema
     /// </summary>
+    ///
 
     [Route("api/[Controller]")]
-    [ApiController]
+    [ApiController] //Especifica que la respuesta 200 OK devolverá una lista de UserRolDto.
     [Produces("application/json")]
 
-    public class UserController : ControllerBase
+    public class UserRolController : ControllerBase
     {
-        private readonly UserBusiness _UserBusiness;
-        private readonly ILogger<UserController> _logger;
+        private readonly UserRolBusiness _UserRolBusiness;
+        private readonly ILogger<UserRolController> _logger;
 
         /// <summary>
-        /// Constructor del Yser de permisos
+        /// Constructor del UserRol de permisos
         /// </summary>
-        /// <param name="UserBusiness">Capa de negocio de permisos</param>
+        /// <param name="UserRolBusiness">Capa de negocio de permisos</param>
         ///  <param name="Logger">Logeer para registro de eventos</param>
-        public UserController(UserBusiness userBusiness, ILogger<UserController> logger)
+        public UserRolController(UserRolBusiness userRolBusiness, ILogger<UserRolController> logger)
         {
-            _UserBusiness = userBusiness;
+            _UserRolBusiness = userRolBusiness;
             _logger = logger;
         }
 
@@ -37,7 +38,7 @@ namespace Web.ContUserlers
         /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<RolUserDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -45,22 +46,22 @@ namespace Web.ContUserlers
         {
             try
             {
-                var User = await _UserBusiness.GetAllUserAsync(); // obtiene la lista de Useres desde la capa de negocio.
-                return Ok(User); //Devuelve un 200 OK con los datos
+                var UserRol = await _UserRolBusiness.GetAllUserRolAsync(); // obtiene la lista de UserRoles desde la capa de negocio.
+                return Ok(UserRol); //Devuelve un 200 OK con los datos
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {UserId}", id);
+                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {UserRolId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {UserId}", id);
+                _logger.LogInformation(ex, "Permiso no encontrado con ID: {UserRolId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {UserId}", id);
+                _logger.LogError(ex, "Error al obtener permiso con ID: {UserRolId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -68,17 +69,17 @@ namespace Web.ContUserlers
         ///<summary>
         ///crea un nuevo permiso en el sistema
         /// </summary>
-        /// <param name="UserDto">Datos del permiso a crear</param>
+        /// <param name="UserRolDto">Datos del permiso a crear</param>
         /// <returns> permiso creado</returns>
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
         /// <response code"500">retorna el permiso creado</response>
-        public async Task<IActionResult> creadoUser([FromBody] UserDto UserDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+        public async Task<IActionResult> creadoUserRol([FromBody] RolUserDto UserRolDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
         {
             try
             {
-                var createUser = await _UserBusiness.CreateUserAsync(UserDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createUser.Id }, createUser);
+                var createUserRol = await _UserRolBusiness.CreateRolUserAsync(UserRolDto);
+                return CreatedAtAction(nameof(GetByIdAsync), new { id = createUserRol.Id }, createUserRol);
             }
             catch (ValidationException ex)
             {

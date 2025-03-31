@@ -2,16 +2,11 @@
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities.Exceptions;
 
 namespace Business
 {
-    class UserRolBusiness
+    public class UserRolBusiness
     {
         private readonly RolUserData _RolUserData;
         private readonly ILogger _logger;
@@ -67,7 +62,7 @@ namespace Business
         }
 
         // Atributo para crear un RolUser desde un DTO
-        public async Task<RolUserDto> CreateAsync(RolUserDto RolUserDto)
+        public async Task<RolUserDto> CreateRolUserAsync(RolUserDto RolUserDto)
         {
             try
             {

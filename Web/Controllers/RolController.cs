@@ -19,13 +19,13 @@ namespace Web.Controllers
         private readonly ILogger<RolController> _logger;
 
         /// <summary>
-        /// Constructor del controlador de permisos
+        /// Constructor del Rol de permisos
         /// </summary>
         /// <param name="RolBusiness">Capa de negocio de permisos</param>
         ///  <param name="Logger">Logeer para registro de eventos</param>
-        public RolController(RolBusiness RolBusiness, ILogger<RolController> logger)
+        public RolController(RolBusiness rolBusiness, ILogger<RolController> logger)
         {
-            _RolBusiness = RolBusiness;
+            _RolBusiness = rolBusiness;
             _logger = logger;
         }
 
@@ -33,9 +33,13 @@ namespace Web.Controllers
         ///obtiene todos los permisos del sistema
         /// </summary>
         /// <response code"200">Retorna la lista de permisos</response>
+        /// <response code="400">ID proporcionado no válido</response>
+        /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RolDto>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {

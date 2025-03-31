@@ -2,7 +2,6 @@
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
-using System;
 using Utilities.Exceptions;
 
 namespace Business
@@ -66,7 +65,7 @@ namespace Business
         }
 
         // Atributo para crear un Persona desde un DTO
-        public async Task<PersonDto> CreateAsync(PersonDto PersonDto)
+        public async Task<PersonDto> CreatePersonAsync(PersonDto PersonDto)
         {
             try
             {

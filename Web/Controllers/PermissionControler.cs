@@ -3,29 +3,29 @@ using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
 
-namespace Web.ContUserlers
+namespace Web.ContPermissionlers
 {
     /// <summary>
-    /// ContUserador para la gestion de permisos en el sistema
+    /// ContModuleador para gestion de permisos en el sistema
     /// </summary>
+    ///
 
-    [Route("api/[Controller]")]
-    [ApiController]
+    [Route("api/[contPermissionler]")]
+    [ApiController] //Especifica que la respuesta 200 OK devolverá una lista de PermissionDto.
     [Produces("application/json")]
-
-    public class UserController : ControllerBase
+    public class PermissionController : ControllerBase
     {
-        private readonly UserBusiness _UserBusiness;
-        private readonly ILogger<UserController> _logger;
+        private readonly PermissionBusinness _PermissionBusiness;
+        private readonly ILogger<PermissionController> _logger;
 
         /// <summary>
-        /// Constructor del Yser de permisos
+        /// Constructor del Permission de permisos
         /// </summary>
-        /// <param name="UserBusiness">Capa de negocio de permisos</param>
+        /// <param name="PermissionBusiness">Capa de negocio de permisos</param>
         ///  <param name="Logger">Logeer para registro de eventos</param>
-        public UserController(UserBusiness userBusiness, ILogger<UserController> logger)
+        public PermissionController(PermissionBusinness permissionBusiness, ILogger<PermissionController> logger)
         {
-            _UserBusiness = userBusiness;
+            _PermissionBusiness = permissionBusiness;
             _logger = logger;
         }
 
@@ -37,7 +37,7 @@ namespace Web.ContUserlers
         /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<PermissionDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -45,22 +45,22 @@ namespace Web.ContUserlers
         {
             try
             {
-                var User = await _UserBusiness.GetAllUserAsync(); // obtiene la lista de Useres desde la capa de negocio.
-                return Ok(User); //Devuelve un 200 OK con los datos
+                var Permission = await _PermissionBusiness.GetAllPermissionAsync(); // obtiene la lista de Permissiones desde la capa de negocio.
+                return Ok(Permission); //Devuelve un 200 OK con los datos
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {UserId}", id);
+                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {PermissionId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {UserId}", id);
+                _logger.LogInformation(ex, "Permiso no encontrado con ID: {PermissionId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {UserId}", id);
+                _logger.LogError(ex, "Error al obtener permiso con ID: {PermissionId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -68,17 +68,17 @@ namespace Web.ContUserlers
         ///<summary>
         ///crea un nuevo permiso en el sistema
         /// </summary>
-        /// <param name="UserDto">Datos del permiso a crear</param>
+        /// <param name="PermissionDto">Datos del permiso a crear</param>
         /// <returns> permiso creado</returns>
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
         /// <response code"500">retorna el permiso creado</response>
-        public async Task<IActionResult> creadoUser([FromBody] UserDto UserDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+        public async Task<IActionResult> creadoPermission([FromBody] PermissionDto PermissionDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
         {
             try
             {
-                var createUser = await _UserBusiness.CreateUserAsync(UserDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createUser.Id }, createUser);
+                var createPermission = await _PermissionBusiness.CreatePermissionAsync(PermissionDto);
+                return CreatedAtAction(nameof(GetByIdAsync), new { id = createPermission.Id }, createPermission);
             }
             catch (ValidationException ex)
             {

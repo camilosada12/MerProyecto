@@ -66,7 +66,7 @@ namespace Business
         }
 
         // Atributo para crear un ModuleForm desde un DTO
-        public async Task<ModuleFormDto> CreateAsync(ModuleFormDto ModuleFormDto)
+        public async Task<ModuleFormDto> CreateModuleForAsync(ModuleFormDto ModuleFormDto)
         {
             try
             {
