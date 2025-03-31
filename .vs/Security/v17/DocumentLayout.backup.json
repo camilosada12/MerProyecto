@@ -1,0 +1,657 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\Security\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{73788738-6C05-4620-B4EC-CF6C730A11A0}|Web\\Web.csproj|f:\\security\\web\\controllers\\rolcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{73788738-6C05-4620-B4EC-CF6C730A11A0}|Web\\Web.csproj|solutionrelative:web\\controllers\\rolcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\rolformpermissionbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\rolformpermissionbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\userrolbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\userrolbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\rolformpermission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\rolformpermission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\rolformpermissiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\rolformpermissiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\roluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\roluser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\personbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\personbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\roluserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\roluserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\roluserdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\roluserdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\moduleformbusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\moduleformbusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\userbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\userbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\rolbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\rolbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\modulebusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\modulebusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\permissionbusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\permissionbusinness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\roldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\roldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\roldata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\roldata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\persondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\persondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|f:\\security\\business\\formbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5B01B6-48DA-4217-A754-9DD1013A5B74}|Business\\Business.csproj|solutionrelative:business\\formbusiness.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\permissiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\permissiondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\moduleformdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\moduleformdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\moduleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\moduleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\rolformpermissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\rolformpermissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\moduleformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\moduleformdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\rol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\person.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\person.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\permission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\permission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\module.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\module.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\model\\form.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\model\\form.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\persondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\persondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\permissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\permissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|f:\\security\\entity\\dtos\\formdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E430215-B5C8-418B-8AC2-2C0CEF3E7A00}|Entity\\Entity.csproj|solutionrelative:entity\\dtos\\formdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\formdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\formdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{73788738-6C05-4620-B4EC-CF6C730A11A0}|Web\\Web.csproj|f:\\security\\web\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{73788738-6C05-4620-B4EC-CF6C730A11A0}|Web\\Web.csproj|solutionrelative:web\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|f:\\security\\data\\userdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{639198EC-B49B-4714-9AC6-A66D6B43E245}|Data\\Data.csproj|solutionrelative:data\\userdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 184,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RolController.cs",
+              "DocumentMoniker": "F:\\Security\\Web\\Controllers\\RolController.cs",
+              "RelativeDocumentMoniker": "Web\\Controllers\\RolController.cs",
+              "ToolTip": "F:\\Security\\Web\\Controllers\\RolController.cs",
+              "RelativeToolTip": "Web\\Controllers\\RolController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:29:54.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RolFormPermissionData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\RolFormPermissionData.cs",
+              "RelativeDocumentMoniker": "Data\\RolFormPermissionData.cs",
+              "ToolTip": "F:\\Security\\Data\\RolFormPermissionData.cs",
+              "RelativeToolTip": "Data\\RolFormPermissionData.cs",
+              "ViewState": "AgIAAKoAAAAAAAAAAAAuwL8AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:27:00.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RolFormPermissionBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\RolFormPermissionBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\RolFormPermissionBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\RolFormPermissionBusiness.cs",
+              "RelativeToolTip": "Business\\RolFormPermissionBusiness.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAuwJQAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:23:39.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "RolUserData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\RolUserData.cs",
+              "RelativeDocumentMoniker": "Data\\RolUserData.cs",
+              "ToolTip": "F:\\Security\\Data\\RolUserData.cs",
+              "RelativeToolTip": "Data\\RolUserData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:16:50.842Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserRolBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\UserRolBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\UserRolBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\UserRolBusiness.cs",
+              "RelativeToolTip": "Business\\UserRolBusiness.cs",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAqwKwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:16:03.9Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "PersonData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\PersonData.cs",
+              "RelativeDocumentMoniker": "Data\\PersonData.cs",
+              "ToolTip": "F:\\Security\\Data\\PersonData.cs",
+              "RelativeToolTip": "Data\\PersonData.cs",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAwwJUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:07:02.303Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "RolData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\RolData.cs",
+              "RelativeDocumentMoniker": "Data\\RolData.cs",
+              "ToolTip": "F:\\Security\\Data\\RolData.cs",
+              "RelativeToolTip": "Data\\RolData.cs",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAuwJYAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T23:07:15.469Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "PermissionData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\PermissionData.cs",
+              "RelativeDocumentMoniker": "Data\\PermissionData.cs",
+              "ToolTip": "F:\\Security\\Data\\PermissionData.cs",
+              "RelativeToolTip": "Data\\PermissionData.cs",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAYwMYAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:55:15.056Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "ModuleFormData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\ModuleFormData.cs",
+              "RelativeDocumentMoniker": "Data\\ModuleFormData.cs",
+              "ToolTip": "F:\\Security\\Data\\ModuleFormData.cs",
+              "RelativeToolTip": "Data\\ModuleFormData.cs",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAAwKwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:47:17.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RolUser.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\RolUser.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\RolUser.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\RolUser.cs",
+              "RelativeToolTip": "Entity\\Model\\RolUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:52.378Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RolFormPermission.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\RolFormPermission.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\RolFormPermission.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\RolFormPermission.cs",
+              "RelativeToolTip": "Entity\\Model\\RolFormPermission.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:47.603Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Rol.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\Rol.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\Rol.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\Rol.cs",
+              "RelativeToolTip": "Entity\\Model\\Rol.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:37.241Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Person.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\Person.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\Person.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\Person.cs",
+              "RelativeToolTip": "Entity\\Model\\Person.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:33.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Permission.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\Permission.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\Permission.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\Permission.cs",
+              "RelativeToolTip": "Entity\\Model\\Permission.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:27.239Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UserDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\UserDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\UserDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\UserDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\UserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:14.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RolUserDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\RolUserDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\RolUserDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\RolUserDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\RolUserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:10.571Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "RolFormPermissionDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\RolFormPermissionDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\RolFormPermissionDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\RolFormPermissionDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\RolFormPermissionDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:06.879Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "RolDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\RolDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\RolDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\RolDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\RolDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:03.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "PersonDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\PersonDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\PersonDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\PersonDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\PersonDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:46:00.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "PermissionDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\PermissionDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\PermissionDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\PermissionDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\PermissionDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:45:52.452Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "ModuleDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\ModuleDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\ModuleDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\ModuleDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\ModuleDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:45:41.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ModuleFormDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\ModuleFormDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\ModuleFormDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\ModuleFormDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\ModuleFormDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:45:17.064Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Module.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\Module.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\Module.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\Module.cs",
+              "RelativeToolTip": "Entity\\Model\\Module.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:45:13.255Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ModuleForm.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\ModuleForm.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\ModuleForm.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\ModuleForm.cs",
+              "RelativeToolTip": "Entity\\Model\\ModuleForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:45:08.294Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\UserBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\UserBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\UserBusiness.cs",
+              "RelativeToolTip": "Business\\UserBusiness.cs",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAQwHsAAABmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:41:58.943Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RolBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\RolBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\RolBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\RolBusiness.cs",
+              "RelativeToolTip": "Business\\RolBusiness.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAAAHYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:41:55.388Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PersonBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\PersonBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\PersonBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\PersonBusiness.cs",
+              "RelativeToolTip": "Business\\PersonBusiness.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAmwHgAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:41:50.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PermissionBusinness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\PermissionBusinness.cs",
+              "RelativeDocumentMoniker": "Business\\PermissionBusinness.cs",
+              "ToolTip": "F:\\Security\\Business\\PermissionBusinness.cs",
+              "RelativeToolTip": "Business\\PermissionBusinness.cs",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAmwHYAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:41:45.915Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ModuleBusinness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\ModuleBusinness.cs",
+              "RelativeDocumentMoniker": "Business\\ModuleBusinness.cs",
+              "ToolTip": "F:\\Security\\Business\\ModuleBusinness.cs",
+              "RelativeToolTip": "Business\\ModuleBusinness.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAcwFUAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:41:08.508Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "FormData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\FormData.cs",
+              "RelativeDocumentMoniker": "Data\\FormData.cs",
+              "ToolTip": "F:\\Security\\Data\\FormData.cs",
+              "RelativeToolTip": "Data\\FormData.cs",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAcwKAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:44.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "FormDto.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\DTOs\\FormDto.cs",
+              "RelativeDocumentMoniker": "Entity\\DTOs\\FormDto.cs",
+              "ToolTip": "F:\\Security\\Entity\\DTOs\\FormDto.cs",
+              "RelativeToolTip": "Entity\\DTOs\\FormDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:27.435Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Form.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\Form.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\Form.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\Form.cs",
+              "RelativeToolTip": "Entity\\Model\\Form.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:18.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "User.cs",
+              "DocumentMoniker": "F:\\Security\\Entity\\Model\\User.cs",
+              "RelativeDocumentMoniker": "Entity\\Model\\User.cs",
+              "ToolTip": "F:\\Security\\Entity\\Model\\User.cs",
+              "RelativeToolTip": "Entity\\Model\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:15.335Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "F:\\Security\\Web\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Web\\Controllers\\UserController.cs",
+              "ToolTip": "F:\\Security\\Web\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Web\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:10.358Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "UserData.cs",
+              "DocumentMoniker": "F:\\Security\\Data\\UserData.cs",
+              "RelativeDocumentMoniker": "Data\\UserData.cs",
+              "ToolTip": "F:\\Security\\Data\\UserData.cs",
+              "RelativeToolTip": "Data\\UserData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:40:07.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "FormBusiness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\FormBusiness.cs",
+              "RelativeDocumentMoniker": "Business\\FormBusiness.cs",
+              "ToolTip": "F:\\Security\\Business\\FormBusiness.cs",
+              "RelativeToolTip": "Business\\FormBusiness.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAmwFUAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:37:13.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ModuleFormBusinness.cs",
+              "DocumentMoniker": "F:\\Security\\Business\\ModuleFormBusinness.cs",
+              "RelativeDocumentMoniker": "Business\\ModuleFormBusinness.cs",
+              "ToolTip": "F:\\Security\\Business\\ModuleFormBusinness.cs",
+              "RelativeToolTip": "Business\\ModuleFormBusinness.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAAAKsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T22:36:39.799Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

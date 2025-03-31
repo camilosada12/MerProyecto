@@ -1,0 +1,11 @@
+C:\Users\SENA\source\repos\Security\Utilities\bin\Debug\net8.0\Utilities.deps.json
+C:\Users\SENA\source\repos\Security\Utilities\bin\Debug\net8.0\Utilities.dll
+C:\Users\SENA\source\repos\Security\Utilities\bin\Debug\net8.0\Utilities.pdb
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfoInputs.cache
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfo.cs
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.csproj.CoreCompileInputs.cache
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.dll
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
+C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll

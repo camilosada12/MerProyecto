@@ -1,0 +1,5 @@
+C:\Users\SENA\source\repos\Security\Business\obj\Debug\net8.0\Business.csproj.AssemblyReference.cache
+C:\Users\SENA\source\repos\Security\Business\obj\Debug\net8.0\Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SENA\source\repos\Security\Business\obj\Debug\net8.0\Business.AssemblyInfoInputs.cache
+C:\Users\SENA\source\repos\Security\Business\obj\Debug\net8.0\Business.AssemblyInfo.cs
+C:\Users\SENA\source\repos\Security\Business\obj\Debug\net8.0\Business.csproj.CoreCompileInputs.cache
