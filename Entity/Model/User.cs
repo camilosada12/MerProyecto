@@ -9,11 +9,9 @@ namespace Entity.Model
         public string Password { get; set; }
         public string gmail { get; set; }
         public DateTime RegistrationDate { get; set; }
-
-        public string UserNotificationId { get; set; }
-
         public bool IsDeleted { get; set; }
-
-        public List<RolUser> RolUser { get; set; } = new List<RolUser>();
+        public List<RolUser> rolUser { get; set; } = new List<RolUser>();
+        public List<AccessLog> accessLogs { get; set; } = new List<AccessLog>();
+        public List<TypePayment> typePayment { get; set; } = new List<TypePayment>();
     }
 }

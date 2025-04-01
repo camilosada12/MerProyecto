@@ -117,7 +117,7 @@ namespace Data
             {
                 // SQL para insertar en la tabla Users
                 var sql = "INSERT INTO Users (UserName, Password, gmail, RegistrationDate, UserNotificationId) " +
-                          "VALUES (@UserName, @Password, @Gmail, @RegistrationDate, @UserNotificationId);"+
+                          "VALUES (@UserName, @Password, @Gmail, @RegistrationDate);"+
                           "SELECT SCOPE_IDENTITY();"; // Esto devuelve el Id del usuario insertado
 
                 // Ejecutar el comando SQL
@@ -127,7 +127,6 @@ namespace Data
                     new SqlParameter("@Password", user.Password),
                     new SqlParameter("@Gmail", user.gmail),
                     new SqlParameter("@RegistrationDate", user.RegistrationDate),
-                    new SqlParameter("@UserNotificationId", user.UserNotificationId)
                 };
 
                 // Ejecutar la consulta y obtener el Id del nuevo usuario
@@ -179,7 +178,6 @@ namespace Data
                           "Password = @Password, " +
                           "gmail = @Gmail, " +
                           "RegistrationDate = @RegistrationDate, " +
-                          "UserNotificationId = @UserNotificationId " +
                           "WHERE Id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
 
                 // Parámetros SQL que se pasan a la consulta
@@ -189,7 +187,6 @@ namespace Data
                     new SqlParameter("@Password", user.Password),
                     new SqlParameter("@Gmail", user.gmail),
                     new SqlParameter("@RegistrationDate", user.RegistrationDate),
-                    new SqlParameter("@UserNotificationId", user.UserNotificationId),
                     new SqlParameter("@Id", user.Id) // El ID es necesario para la condición WHERE
                 };
 

@@ -94,7 +94,6 @@ namespace Business
                     throw new EntityNotFoundException("RolUserDto", "No se encontró la relación RolUserDto");
                 }
 
-                existingRolUser.IsDeleted = RolUserDTO.IsDeleted;
                 var success = await _RolUserData.UpdateAsync(existingRolUser);
 
                 if (!success)

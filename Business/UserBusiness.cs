@@ -148,7 +148,6 @@ namespace Business
                 Id = User.Id,
                 UserName = User.UserName,
                 gmail = User.gmail,
-                UserNotificationId = User.UserNotificationId
             };
         }
 
@@ -160,7 +159,6 @@ namespace Business
                 Id = UserDto.Id,
                 UserName = UserDto.UserName,
                 gmail = UserDto.gmail,
-                UserNotificationId = UserDto.UserNotificationId
             };
         }
 

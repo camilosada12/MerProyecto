@@ -94,7 +94,6 @@ namespace Business
                     throw new EntityNotFoundException("RolFormPermissionDto", "No se encontró la relación RolFormPermissionDto");
                 }
 
-                existingRolFormPermission.IsDeleted = RolFormPermissionDTO.IsDeleted;
                 var success = await _RolFormPermissionData.UpdateAsync(existingRolFormPermission);
 
                 if (!success)

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Security\\Business\\Business.csproj": {}
+    "D:\\Security\\Business\\Business.csproj": {}
   },
   "projects": {
-    "F:\\Security\\Business\\Business.csproj": {
+    "D:\\Security\\Business\\Business.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Security\\Business\\Business.csproj",
+        "projectUniqueName": "D:\\Security\\Business\\Business.csproj",
         "projectName": "Business",
-        "projectPath": "F:\\Security\\Business\\Business.csproj",
-        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
-        "outputPath": "F:\\Security\\Business\\obj\\",
+        "projectPath": "D:\\Security\\Business\\Business.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Security\\Business\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,21 +26,20 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\Security\\Data\\Data.csproj": {
-                "projectPath": "F:\\Security\\Data\\Data.csproj"
+              "D:\\Security\\Data\\Data.csproj": {
+                "projectPath": "D:\\Security\\Data\\Data.csproj"
               },
-              "F:\\Security\\Entity\\Entity.csproj": {
-                "projectPath": "F:\\Security\\Entity\\Entity.csproj"
+              "D:\\Security\\Entity\\Entity.csproj": {
+                "projectPath": "D:\\Security\\Entity\\Entity.csproj"
               },
-              "F:\\Security\\Utilities\\Utilities.csproj": {
-                "projectPath": "F:\\Security\\Utilities\\Utilities.csproj"
+              "D:\\Security\\Utilities\\Utilities.csproj": {
+                "projectPath": "D:\\Security\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -80,20 +79,20 @@
         }
       }
     },
-    "F:\\Security\\Data\\Data.csproj": {
+    "D:\\Security\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Security\\Data\\Data.csproj",
+        "projectUniqueName": "D:\\Security\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "F:\\Security\\Data\\Data.csproj",
-        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
-        "outputPath": "F:\\Security\\Data\\obj\\",
+        "projectPath": "D:\\Security\\Data\\Data.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Security\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -102,15 +101,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\Security\\Entity\\Entity.csproj": {
-                "projectPath": "F:\\Security\\Entity\\Entity.csproj"
+              "D:\\Security\\Entity\\Entity.csproj": {
+                "projectPath": "D:\\Security\\Entity\\Entity.csproj"
               }
             }
           }
@@ -150,20 +148,20 @@
         }
       }
     },
-    "F:\\Security\\Entity\\Entity.csproj": {
+    "D:\\Security\\Entity\\Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Security\\Entity\\Entity.csproj",
+        "projectUniqueName": "D:\\Security\\Entity\\Entity.csproj",
         "projectName": "Entity",
-        "projectPath": "F:\\Security\\Entity\\Entity.csproj",
-        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
-        "outputPath": "F:\\Security\\Entity\\obj\\",
+        "projectPath": "D:\\Security\\Entity\\Entity.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Security\\Entity\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -172,7 +170,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -242,20 +239,20 @@
         }
       }
     },
-    "F:\\Security\\Utilities\\Utilities.csproj": {
+    "D:\\Security\\Utilities\\Utilities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Security\\Utilities\\Utilities.csproj",
+        "projectUniqueName": "D:\\Security\\Utilities\\Utilities.csproj",
         "projectName": "Utilities",
-        "projectPath": "F:\\Security\\Utilities\\Utilities.csproj",
-        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
-        "outputPath": "F:\\Security\\Utilities\\obj\\",
+        "projectPath": "D:\\Security\\Utilities\\Utilities.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Security\\Utilities\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -264,7 +261,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

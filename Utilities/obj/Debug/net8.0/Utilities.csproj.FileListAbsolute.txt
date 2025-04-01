@@ -9,3 +9,15 @@ C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.dll
 C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
 C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
 C:\Users\SENA\source\repos\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll
+D:\Security\Utilities\bin\Debug\net8.0\Utilities.deps.json
+D:\Security\Utilities\bin\Debug\net8.0\Utilities.dll
+D:\Security\Utilities\bin\Debug\net8.0\Utilities.pdb
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfoInputs.cache
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfo.cs
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.csproj.CoreCompileInputs.cache
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.sourcelink.json
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.dll
+D:\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
+D:\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
+D:\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll

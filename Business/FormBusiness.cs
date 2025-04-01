@@ -94,7 +94,6 @@ namespace Business
                     throw new EntityNotFoundException("Form", "No se encontró la relación Form");
                 }
 
-                existingForm.IsDeleted = formDto.IsDeleted;
                 var success = await _formData.UpdateAsync(existingForm);
 
                 if (!success)

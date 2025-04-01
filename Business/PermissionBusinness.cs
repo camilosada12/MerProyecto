@@ -94,7 +94,6 @@ namespace Business
                     throw new EntityNotFoundException("PermissionDto", "No se encontró la relación PermissionDto");
                 }
 
-                existingPermission.IsDeleted = permissionDto.IsDeleted;
                 var success = await _PermissionData.UpdateAsync(existingPermission);
 
                 if (!success)

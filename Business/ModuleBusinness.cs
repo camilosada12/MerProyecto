@@ -94,7 +94,6 @@ namespace Business
                     throw new EntityNotFoundException("Module", "No se encontró la relación Module");
                 }
 
-                existingModule.IsDeleted = moduleDto.IsDeleted;
                 var success = await _ModuleData.UpdateAsync(existingModule);
 
                 if (!success)
