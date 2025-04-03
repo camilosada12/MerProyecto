@@ -1,6 +1,4 @@
-﻿
-
-using Entity.Contexts;
+﻿using Entity.Contexts;
 using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +9,7 @@ namespace Data
     public class PersonData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<PersonData> _logger;
 
 
         /// <summary>
@@ -19,7 +17,7 @@ namespace Data
         /// </summary>
         /// <param name="context">instacia de <see cref="ApplicationDbContext"/> para la conexion con la base de datos </param>
 
-        public PersonData(ApplicationDbContext context, ILogger logger)
+        public PersonData(ApplicationDbContext context, ILogger<PersonData> logger)
         {
             _context = context;
             _logger = logger;

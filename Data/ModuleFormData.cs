@@ -10,7 +10,7 @@ namespace Data
     public class ModuleFormData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ModuleFormData> _logger;
 
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace Data
         /// </summary>
         /// <param name="context">instacia de <see cref="ApplicationDbContext"/> para la conexion con la base de datos </param>
 
-        public ModuleFormData(ApplicationDbContext context, ILogger logger)
+        public ModuleFormData(ApplicationDbContext context, ILogger<ModuleFormData> logger)
         {
             _context = context;
             _logger = logger;

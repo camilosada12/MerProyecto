@@ -12,9 +12,9 @@ namespace Business
     public class UserBusiness
     {
         private readonly UserData _userData;
-        private readonly ILogger _logger;
+        private readonly ILogger<UserBusiness> _logger;
 
-        public UserBusiness(UserData userData, ILogger logger)
+        public UserBusiness(UserData userData, ILogger<UserBusiness> logger)
         {
             _userData = userData;
             _logger = logger;
@@ -41,13 +41,13 @@ namespace Business
         {
             if(id <= 0)
             {
-                _logger.LogWarning("se intento obtener un User con Id invalido: {UserId}", id);
+                _logger.LogWarning("se intento obtener un User con Id invalido: {Id}", id);
                 throw new Utilities.Exceptions.ValidationException("id", "el Id del user debe ser meyor a cero");
             }
 
             try
             {
-                var User = await _userData.GetByIdAsync(id);
+                var User = await _userData.GetByIdAsyncSQL(id);
                 if(User == null)
                 {
                     _logger.LogInformation("No se encontro ningun User con Id: {UserId}", id);
@@ -63,7 +63,7 @@ namespace Business
             }
         }
 
-        //Atributo para crear un User desde el DTO
+        // Corrección en CreateUserAsync
         public async Task<UserDto> CreateUserAsync(UserDto UserDto)
         {
             try
@@ -72,69 +72,78 @@ namespace Business
 
                 var User = MapToEntity(UserDto);
 
+                // Corrección: Asegurar que se retorna el ID correcto
                 var UserCreado = await _userData.CreateAsyncSQL(User);
+                _logger.LogInformation("Usuario insertado con ID: {UserId}", UserCreado.id);
 
                 return MapToDTO(UserCreado);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear nuevo User : {UserNombre}", UserDto?.UserName ?? "null");
                 throw new ExternalServiceException("base de datos ", "Error al crear el User", ex);
             }
         }
 
-        public async Task<UserDto> UpdateUserAsync(UserDto userDto)
+
+        public async Task<UserDto> UpdateUserAsync(int id, UserDto userDto)
         {
             try
             {
                 valiteUser(userDto);
-                var existingUser = await _userData.GetByIdAsync(userDto.Id);
+
+                var existingUser = await _userData.GetByIdAsync(id);
                 if (existingUser == null)
                 {
-                    throw new EntityNotFoundException("User", "No se encontró la relación User");
+                    throw new EntityNotFoundException("User", $"No se encontró el usuario con ID {id}");
                 }
 
-                existingUser.IsDeleted = userDto.IsDeleted;
+                // Convertir la fecha a UTC antes de actualizar
+                existingUser.user_per = userDto.UserName;
+                existingUser.password = userDto.Password;
+                existingUser.gmail = userDto.Gmail;
+                existingUser.registrationdate = userDto.Registrationdate.ToUniversalTime();
+
                 var success = await _userData.UpdateAsync(existingUser);
 
                 if (!success)
                 {
-                    throw new Exception("No se pudo actualizar la relación User.");
+                    throw new Exception("No se pudo actualizar el usuario.");
                 }
 
                 return MapToDTO(existingUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la relación User");
-                throw new ExternalServiceException("Base de datos", "Error al actualizar la relación User", ex);
+                _logger.LogError(ex, $"Error al actualizar el usuario con ID {id}");
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario", ex);
             }
         }
 
+
         // Método para eliminar una relación Rol de manera lógica
-        public async Task<bool> DeleteRolLogicalAsync(int id)
+        public async Task<bool> DeleteUserAsync(int id)
         {
             try
             {
-                return await _userData.DeleteAsync(id);
+                return await _userData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar lógicamente la relación Rol");
-                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Rol", ex);
+                _logger.LogError(ex, "Error al eliminar lógicamente la relación User");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación User", ex);
             }
         }
 
         //Atributo para validar al DTO
         private void valiteUser(UserDto UserDto)
         {
-            if(UserDto == null)
+            if (UserDto == null)
             {
                 throw new Utilities.Exceptions.ValidationException("El objeto User np puede ser Nulo");
             }
 
-            if (string.IsNullOrWhiteSpace(UserDto.UserName))
-            {
+            if (string.IsNullOrWhiteSpace(UserDto.UserName)){ 
                 _logger.LogWarning("se intento crear/actualizar un User Name vacio");
                 throw new Utilities.Exceptions.ValidationException("Name", "El Name del User es obligatorio");
             }
@@ -145,9 +154,11 @@ namespace Business
         {
             return new UserDto
             {
-                Id = User.Id,
-                UserName = User.UserName,
-                gmail = User.gmail,
+                id = User.id,  
+                UserName = User.user_per,
+                Password = User.password,  // 🔴 Asegurar que se asigna bien
+                Gmail = User.gmail,
+                Registrationdate = User.registrationdate
             };
         }
 
@@ -156,9 +167,11 @@ namespace Business
         {
             return new User
             {
-                Id = UserDto.Id,
-                UserName = UserDto.UserName,
-                gmail = UserDto.gmail,
+                id = UserDto.id, 
+                user_per = UserDto.UserName,
+                password = UserDto.Password,  // 🔴 Asegurar que se asigna bien
+                gmail = UserDto.Gmail,
+                registrationdate = UserDto.Registrationdate
             };
         }
 

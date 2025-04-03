@@ -10,7 +10,7 @@ namespace Web.ContPermissionlers
     /// </summary>
     ///
 
-    [Route("api/[contPermissionler]")]
+    [Route("api/[controller]")]
     [ApiController] //Especifica que la respuesta 200 OK devolverá una lista de PermissionDto.
     [Produces("application/json")]
     public class PermissionController : ControllerBase
@@ -36,7 +36,8 @@ namespace Web.ContPermissionlers
         /// <response code="400">ID proporcionado no válido</response>
         /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
-        [HttpGet]
+        
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<PermissionDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -72,7 +73,12 @@ namespace Web.ContPermissionlers
         /// <returns> permiso creado</returns>
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
-        /// <response code"500">retorna el permiso creado</response>
+        /// <response code"500">retorna el permiso creado</response
+
+        [HttpPost]
+        [ProducesResponseType(typeof(PermissionDto), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> creadoPermission([FromBody] PermissionDto PermissionDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
         {
             try

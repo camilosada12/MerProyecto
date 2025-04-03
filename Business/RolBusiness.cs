@@ -12,9 +12,9 @@ namespace Business
     public class RolBusiness
     {
         private readonly RolData _rolData;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolBusiness> _logger;
 
-        public RolBusiness(RolData rolData, ILogger logger)
+        public RolBusiness(RolData rolData, ILogger<RolBusiness> logger)
         {
             _rolData = rolData;
             _logger = logger;
@@ -36,91 +36,97 @@ namespace Business
             }
         }
 
-        // Atributo para obtener un rol por ID como DTO
+        //Atributo para obtener un Rol por Id como DTO
         public async Task<RolDto> GetRolByIdAsync(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se intentó obtener un rol con ID inválido: {RolId}", id);
-                throw new Utilities.Exceptions.ValidationException("id", "El ID del rol debe ser mayor que cero");
+                _logger.LogWarning("se intento obtener un Rol con Id invalido: {Id}", id);
+                throw new Utilities.Exceptions.ValidationException("id", "el Id del Rol debe ser meyor a cero");
             }
 
             try
             {
-                var rol = await _rolData.GetByIdAsync(id);
-                if (rol == null)
+                var Rol = await _rolData.GetByRolIdAsyncSQL(id);
+                if (Rol == null)
                 {
-                    _logger.LogInformation("No se encontró ningún rol con ID: {RolId}", id);
+                    _logger.LogInformation("No se encontro ningun Rol con Id: {RolId}", id);
                     throw new EntityNotFoundException("Rol", id);
                 }
 
-                return MapToDTO(rol);
+                return MapToDTO(Rol);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el rol con ID: {RolId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al recuperar el rol con ID {id}", ex);
+                _logger.LogError(ex, "Error al obtener el Rol con ID: {RolId}", id);
+                throw new ExternalServiceException("base de datos", $"Error al recuperar el Rol con Id {id}", ex);
             }
         }
 
-        // Atributo para crear un rol desde un DTO
+        // Corrección en CreateRolAsync
         public async Task<RolDto> CreateRolAsync(RolDto RolDto)
         {
             try
             {
                 ValidateRol(RolDto);
 
-                var rol = MapToEntity(RolDto);
+                var Rol = MapToEntity(RolDto);
 
-                var rolCreado = await _rolData.CreateAsync(rol);
+                // Corrección: Asegurar que se retorna el ID correcto
+                var RolCreado = await _rolData.CreateAsyncSQL(Rol);
+                _logger.LogInformation("Usuario insertado con ID: {RolId}", RolCreado.id);
 
-                return MapToDTO(rolCreado);
+                return MapToDTO(RolCreado);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear nuevo rol: {RolNombre}", RolDto?.Role ?? "null");
-                throw new ExternalServiceException("Base de datos", "Error al crear el rol", ex);
+                _logger.LogError(ex, "Error al crear nuevo Rol : {RolNombre}", RolDto?.Role ?? "null");
+                throw new ExternalServiceException("base de datos ", "Error al crear el Rol", ex);
             }
         }
 
-        public async Task<RolDto> UpdateRolAsync(RolDto rolDto)
+        public async Task<RolDto> UpdateRolAsync(int id, RolDto RolDto)
         {
             try
             {
-                ValidateRol(rolDto);
-                var existingRol = await _rolData.GetByIdAsync(rolDto.Id);
+                ValidateRol(RolDto);
+
+                var existingRol = await _rolData.GetByIdAsync(id);
                 if (existingRol == null)
                 {
-                    throw new EntityNotFoundException("Rol", "No se encontró la relación Rol");
+                    throw new EntityNotFoundException("Rol", $"No se encontró el usuario con ID {id}");
                 }
 
-                existingRol.IsDeleted = rolDto.IsDeleted;
+                // Convertir la fecha a UTC antes de actualizar
+                existingRol.role = RolDto.Role;
+                existingRol.description = RolDto.Description;
+
                 var success = await _rolData.UpdateAsync(existingRol);
 
                 if (!success)
                 {
-                    throw new Exception("No se pudo actualizar la relación Rol.");
+                    throw new Exception("No se pudo actualizar el usuario.");
                 }
 
                 return MapToDTO(existingRol);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la relación Rol");
-                throw new ExternalServiceException("Base de datos", "Error al actualizar la relación Rol", ex);
+                _logger.LogError(ex, $"Error al actualizar el usuario con ID {id}");
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario", ex);
             }
         }
 
         // Método para eliminar una relación Rol de manera permanente
-        public async Task<bool> DeleteRolPermanentAsync(int id)
+        public async Task<bool> DeleteRolAsync(int id)
         {
             try
             {
-                return await _rolData.DeleteAsync(id);
+                return await _rolData.DeleteRolAsyncSQL(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar permanentemente la relación Rol");
+                _logger.LogError(ex, "Error al eliminar lógicamente la relación Rol");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Rol", ex);
             }
         }
@@ -145,9 +151,9 @@ namespace Business
         {
             return new RolDto
             {
-                Id = rol.Id,
-                Role = rol.Role,
-                Description = rol.Description // Si existe en la entidad
+                Id = rol.id,
+                Role = rol.role,
+                Description = rol.description // Si existe en la entidad
             };
         }
 
@@ -156,9 +162,9 @@ namespace Business
         {
             return new Rol
             {
-                Id = RolDto.Id,
-                Role = RolDto.Role,
-                Description = RolDto.Description // Si existe en la entidad
+                id = RolDto.Id,
+                role = RolDto.Role,
+                description = RolDto.Description // Si existe en la entidad
             };
         }
 

@@ -1,10 +1,13 @@
-﻿
-
+﻿using Dapper;
 using Entity.Contexts;
 using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Server;
+using Npgsql;
+using System.Data;
+using Utilities.Exceptions;
 
 namespace Data
 {
@@ -14,7 +17,7 @@ namespace Data
     public class RolData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolData> _logger;
 
 
         /// <summary>
@@ -22,7 +25,7 @@ namespace Data
         /// </summary>
         /// <param name="context">instacia de <see cref="ApplicationDbContext"/> para la conexion con la base de datos </param>
 
-        public RolData(ApplicationDbContext context, ILogger logger)
+        public RolData(ApplicationDbContext context, ILogger<RolData> logger)
         {
             _context = context;
             _logger = logger;
@@ -34,18 +37,16 @@ namespace Data
         /// <returns>lista de roles </returns>
 
         // Atributo para linq
-        public async Task<IEnumerable<Rol>> GetAllAsync()
+        public async Task<IEnumerable<Rol>> GetRolesAsync()
         {
             return await _context.Set<Rol>().ToListAsync();
-
         }
 
         // Atributo para SQL
         public async Task<IEnumerable<Rol>> GetAllAsyncSQL()
         {
-
-            string query = "SELECT * FROM Rol";
-            return (IEnumerable<Rol>)await _context.QueryAsync<IEnumerable<Rol>>(query);
+            string query = "SELECT * FROM rol";
+            return await _context.Set<Rol>().FromSqlRaw(query).ToListAsync();
         }
 
         //Atributo Linq
@@ -57,35 +58,25 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener rol con Id {RolId}", id);
-                throw; // Re-lanza la excepcion para que sea manejada en capas superiores
+                _logger.LogError(ex, "Error al obtener el usuario con el Id {RolId}", id);
+                throw;
             }
         }
 
         //Atributo SQL
-        public async Task<Rol?> GetByIdAsyncSQL(Rol id)
+        public async Task<Rol?> GetByRolIdAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL con parámetro para el Id
-                var query = "SELECT * FROM Rol WHERE Id = @id";  // Asegúrate de que el nombre de la tabla sea correcto
+                var query = "SELECT * FROM rol WHERE id = @Id";  // "id" en minúsculas
+                var parametro = new NpgsqlParameter("@Id", id);
 
-                var parametrosRol = new SqlParameter[]
-                {
-                    new SqlParameter("@id", id.Id),
-                };
-
-                // Ejecutar la consulta y obtener el Id del nuevo usuario
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametrosRol);
-
-                // Obtener el usuario recién insertado con el Id generado
-                id.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
-                return id;
+                return await _context.Set<Rol>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Usuario con el Id {Id}", id);
-                throw; // Re-lanza la excepción para ser manejada en las capas superiores
+                _logger.LogError(ex, "Error al obtener el Rol con el Id {id}", id);
+                throw;
             }
         }
 
@@ -116,27 +107,31 @@ namespace Data
         {
             try
             {
-                // SQL para insertar en la tabla Users
-                var query = "INSERT INTO Rol (Role , Description) " +
-                          "VALUES (@role, @description);"; // Esto devuelve el Id del usuario insertado
+                const string query = @"INSERT INTO public.""rol""(
+	                                ""role"", ""description"")
+	                                VALUES ( @Role, @Description)  RETURNING id;";
 
-                // Ejecutar el comando SQL
-                var parametrosRol = new SqlParameter[]
+                var parameters = new
                 {
-                    new SqlParameter("@role", rol.Role),
-                    new SqlParameter("@description", rol.Description),
+                    Role = rol.role,
+                    Description = rol.description
                 };
 
-                // Ejecutar la consulta y obtener el Id del nuevo usuario
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametrosRol);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    if (connection.State == ConnectionState.Closed)
+                        await connection.OpenAsync();
 
-                // Obtener el usuario recién insertado con el Id generado
-                rol.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
+                    rol.id = await connection.ExecuteScalarAsync<int>(query, parameters);
+
+                    await connection.CloseAsync(); // Cerramos la conexión
+                }
+
                 return rol;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el usuario: {ex.Message}");
+                _logger.LogError(ex, "No se pudo agregar el usuario.");
                 throw;
             }
         }
@@ -158,40 +153,36 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el rol: {ex.Message}");
+                _logger.LogError($"Error al actualizar el usuario {ex.Message}");
                 return false;
             }
         }
 
         //Atributo SQL
-        public async Task<bool> UpdateAsyncSql(Rol rol)
+        public async Task<bool> UpdateAsyncSQL(Rol Rol)
         {
             try
             {
-                // SQL para actualizar el rol en la tabla Rol
-                var query = "UPDATE Rol " +
-                    "       SET Role = @role," +
-                    "       Description = @description " +
-                    "       WHERE Id = @id";
+                var sql = @"
+            UPDATE public.rol
+            SET role = @Role, 
+            description = @Description, 
+            WHERE id = @Id;";
 
-                // Parámetros SQL que se pasan a la consulta
-                var parametros = new SqlParameter[]
+                var parametros = new[]
                 {
-                    new SqlParameter("@role", rol.Role),
-                    new SqlParameter("@description", rol.Description),
-                    new SqlParameter("@id", rol.Id) // Se usa el Id para especificar cuál rol se actualiza
+                    new NpgsqlParameter("@RolPer", Rol.role),
+                    new NpgsqlParameter("@Password", Rol.description),
+                    new NpgsqlParameter("@Id", Rol.id) 
                 };
 
-                // Ejecutar la consulta SQL para actualizar el rol
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(query, parametros);
-
-                // Verificar si la actualización afectó alguna fila (es decir, si el rol fue actualizado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el rol: {ex.Message}");
-                throw;
+                _logger.LogError(ex, $"Error al actualizar el usuario con ID {Rol.id}");
+                throw new ExternalServiceException("Base de datos", $"Error al actualizar el usuario con ID {Rol.id}", ex);
             }
         }
 
@@ -207,45 +198,37 @@ namespace Data
         {
             try
             {
-                var rolData = await _context.Set<Rol>().FindAsync(id);
-                if (rolData == null)
-                    return false;
+                var Role = await _context.Set<Rol>().FindAsync(id);
+                if (Role == null) return false;
 
-                _context.Set<Rol>().Remove(rolData);
+                _context.Set<Rol>().Update(Role);
                 await _context.SaveChangesAsync();
+
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar el rol: {ex.Message}");
-                return false;
+                _logger.LogError(ex, $"Error al eliminar el Role con ID {id}");
+                throw new ExternalServiceException("Base de datos", $"Error al eliminar el Role con ID {id}", ex);
             }
         }
 
         //Atributo SQL
-        public async Task<bool> DeleteAsyncSql(int id)
+        public async Task<bool> DeleteRolAsyncSQL(int id)
         {
             try
             {
-                // SQL para eliminar el rol de la tabla Rol
-                var query = "DELETE FROM Rol WHERE Id = @id";  // Consulta para eliminar el rol con el Id proporcionado
-
-                // Parámetro SQL que se pasa a la consulta
-                var parametro = new SqlParameter("@id", id);  // El Id del rol a eliminar
-
-                // Ejecutar la consulta SQL para eliminar el rol
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(query, parametro);
-
-                // Verificar si la eliminación afectó alguna fila (es decir, si el rol fue eliminado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la eliminación fue exitosa
+                var sql = "DELETE FROM rol WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar el rol: {ex.Message}");
+                _logger.LogError($"Error al eliminar el usuario: {ex.Message}");
                 return false;
             }
         }
-
 
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Reflection;
 
+
 namespace Entity.Contexts
 {
     /// <summary>
@@ -32,6 +33,13 @@ namespace Entity.Contexts
             _configuration = configuration;
         }
 
+        ///
+        /// Db SETS
+        /// 
+
+        public DbSet<User> usermulta { get; set; }  // Agregar esta línea
+        public DbSet<Rol> rol { get; set; }  // Agregar esta línea
+
         /// <summary>
         /// Configura los modelos de la base de datos aplicando configuraciones desde ensamblados.
         /// </summary>
@@ -40,8 +48,6 @@ namespace Entity.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            base.OnModelCreating(modelBuilder);
         }
 
         /// <summary>
@@ -51,7 +57,6 @@ namespace Entity.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            // Otras configuraciones adicionales pueden ir aquí
         }
 
         /// <summary>

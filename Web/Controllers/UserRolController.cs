@@ -1,4 +1,5 @@
-﻿using Business;
+﻿
+using Business;
 using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
@@ -37,7 +38,7 @@ namespace Web.Controllers
         /// <response code="400">ID proporcionado no válido</response>
         /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<RolUserDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -74,6 +75,11 @@ namespace Web.Controllers
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
         /// <response code"500">retorna el permiso creado</response>
+
+        [HttpPost]
+        [ProducesResponseType(typeof(RolUserDto), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> creadoUserRol([FromBody] RolUserDto UserRolDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
         {
             try

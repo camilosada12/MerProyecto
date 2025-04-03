@@ -29,6 +29,27 @@ namespace Web.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Obtener todos los forms del sistema
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<RolDto>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllForms()
+        {
+            try
+            {
+                var Forms = await _RolBusiness.GetAllRolesAsync();
+                return Ok(Forms);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error al obtener los forms");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
         ///<summary>
         ///obtiene todos los permisos del sistema
         /// </summary>
@@ -36,35 +57,39 @@ namespace Web.Controllers
         /// <response code="400">ID proporcionado no válido</response>
         /// <response code="404">Permiso no encontrado</response>
         /// <response code"500">Error interno del servidor</response>
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<RolDto>), 200)]
+
+        ///<summary>
+        /// Obtener un form especificio por su ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(RolDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetRolById(int id)
         {
             try
             {
-                var Rol = await _RolBusiness.GetAllRolesAsync(); // obtiene la lista de roles desde la capa de negocio.
-                return Ok(Rol); //Devuelve un 200 OK con los datos
+                var Rol = await _RolBusiness.GetRolByIdAsync(id);
+                return Ok(Rol);
             }
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {RolId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para Rol con ID: {RolId}", id);
                 return BadRequest(new { message = ex.Message });
             }
-            catch(EntityNotFoundException ex)
+            catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {RolId}", id);
-                return NotFound(new {message = ex.Message });
+
+                _logger.LogInformation(ex, "Rol no encontrado con ID: {RolId}", id);
+                return NotFound(new { message = ex.Message });
             }
-            catch(ExternalServiceException ex)
+            catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {RolId}", id);
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener el Rol con ID: {RolId}", id);
+                throw;
             }
         }
-
         ///<summary>
         ///crea un nuevo permiso en el sistema
         /// </summary>
@@ -73,27 +98,95 @@ namespace Web.Controllers
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
         /// <response code"500">retorna el permiso creado</response>
-        public async Task<IActionResult> creadoRol([FromBody] RolDto RolDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+
+        [HttpPost]
+        [ProducesResponseType(typeof(RolDto), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+
+        public async Task<IActionResult> creadoRol([FromBody] RolDto RolDto)
         {
+            _logger.LogInformation("Recibiendo petición para crear usuario");
             try
             {
                 var createRol = await _RolBusiness.CreateRolAsync(RolDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createRol.Id }, createRol);
+                _logger.LogInformation("Usuario creado con ID: {RolId}", createRol.Id);
+                return CreatedAtAction(nameof(GetRolById), new { id = createRol.Id }, createRol);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear usuario");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(RolDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateRolAsync(int id, [FromBody] RolDto RolDto)
+        {
+            try
+            {
+                var updatedRol = await _RolBusiness.UpdateRolAsync(id, RolDto);
+                return Ok(updatedRol);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al crear permiso");
+                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {RolId}", id);
                 return BadRequest(new { message = ex.Message });
             }
-            catch  (ExternalServiceException ex)
+            catch (EntityNotFoundException ex)
             {
-                _logger.LogError(ex, "Error al crear permiso");
+                _logger.LogInformation(ex, "Usuario no encontrado con ID: {RolId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al actualizar usuario con ID: {RolId}", id);
+                return StatusCode(500, new { message = ex.Message });
+
+
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            try
+            {
+                var result = await _RolBusiness.DeleteRolAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Usuario no encontrado" });
+                }
+                return NoContent();
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar usuario con ID: {UserId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Usuario no encontrado con ID: {UserId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar usuario con ID: {UserId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
-
-            //BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
-            //NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
-            //StatusCode = Este método te permite devolver cualquier código de estado HTTP.
         }
+
     }
 }
+
+//BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
+//NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
+//StatusCode = Este método te permite devolver cualquier código de estado HTTP.

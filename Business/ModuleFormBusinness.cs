@@ -13,9 +13,9 @@ namespace Business
     public class ModuleFormBusinness
     {
         private readonly ModuleFormData _ModuleFormData;
-        private readonly ILogger _logger;
+        private readonly ILogger<ModuleFormBusinness> _logger;
 
-        public ModuleFormBusinness(ModuleFormData moduleFormData, ILogger logger)
+        public ModuleFormBusinness(ModuleFormData moduleFormData, ILogger<ModuleFormBusinness> logger)
         {
             _ModuleFormData = moduleFormData;
             _logger = logger;
@@ -98,7 +98,6 @@ namespace Business
                     throw new EntityNotFoundException("ModuleFormDto", "No se encontró la relación FormModule");
                 }
 
-                existingModuleForm.IsDeleted = moduleForDTO.IsDeleted;
                 var success = await _ModuleFormData.UpdateAsync(existingModuleForm);
 
                 if (!success)

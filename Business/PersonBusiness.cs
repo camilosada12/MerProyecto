@@ -12,9 +12,9 @@ namespace Business
     public class PersonBusiness
     {
         private readonly PersonData _PersonData;
-        private readonly ILogger _logger;
+        private readonly ILogger<PersonBusiness> _logger;
 
-        public PersonBusiness(PersonData PersonData, ILogger logger)
+        public PersonBusiness(PersonData PersonData, ILogger<PersonBusiness> logger)
         {
             _PersonData = PersonData;
             _logger = logger;
@@ -94,8 +94,6 @@ namespace Business
                 {
                     throw new EntityNotFoundException("Person", "No se encontró la relación Person");
                 }
-
-                existingPerson.IsDeleted = personDto.IsDeleted;
                 var success = await _PersonData.UpdateAsync(existingPerson);
 
                 if (!success)
