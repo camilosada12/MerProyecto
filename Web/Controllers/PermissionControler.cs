@@ -5,13 +5,10 @@ using Utilities.Exceptions;
 
 namespace Web.ContPermissionlers
 {
-    /// <summary>
-    /// ContModuleador para gestion de permisos en el sistema
-    /// </summary>
-    ///
+    
 
     [Route("api/[controller]")]
-    [ApiController] //Especifica que la respuesta 200 OK devolverá una lista de PermissionDto.
+    [ApiController]  
     [Produces("application/json")]
     public class PermissionController : ControllerBase
     {
@@ -29,40 +26,57 @@ namespace Web.ContPermissionlers
             _logger = logger;
         }
 
-        ///<summary>
-        ///obtiene todos los permisos del sistema
+        /// <summary>
+        /// Obtener todos los Permission del sistema
         /// </summary>
-        /// <response code"200">Retorna la lista de permisos</response>
-        /// <response code="400">ID proporcionado no válido</response>
-        /// <response code="404">Permiso no encontrado</response>
-        /// <response code"500">Error interno del servidor</response>
-        
-        [HttpGet("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PermissionDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetAllPermissionForms()
         {
             try
             {
-                var Permission = await _PermissionBusiness.GetAllPermissionAsync(); // obtiene la lista de Permissiones desde la capa de negocio.
-                return Ok(Permission); //Devuelve un 200 OK con los datos
+                var Permission = await _PermissionBusiness.GetAllPermissionAsync();
+                return Ok(Permission);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error al obtener los Permission");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        ///<summary>
+        /// Obtener un Permission especificio por su ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PermissionDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetPermissionById(int id)
+        {
+            try
+            {
+                var Permission = await _PermissionBusiness.GetPermissionByIdAsync(id);
+                return Ok(Permission);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {PermissionId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para Permission con ID: {PermissionId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {PermissionId}", id);
+
+                _logger.LogInformation(ex, "Permission no encontrado con ID: {PermissionId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {PermissionId}", id);
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener el Permission con ID: {PermissionId}", id);
+                throw;
             }
         }
 
@@ -73,33 +87,90 @@ namespace Web.ContPermissionlers
         /// <returns> permiso creado</returns>
         /// <response code"201">retorna el permiso creado</response>
         /// <response code"400">retorna el permiso creado</response>
-        /// <response code"500">retorna el permiso creado</response
+        /// <response code"500">retorna el permiso creado</response>
 
         [HttpPost]
         [ProducesResponseType(typeof(PermissionDto), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> creadoPermission([FromBody] PermissionDto PermissionDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+
+        public async Task<IActionResult> creadoUser([FromBody] PermissionDto permissionDto)
         {
+            _logger.LogInformation("Recibiendo petición para crear permiso");
             try
             {
-                var createPermission = await _PermissionBusiness.CreatePermissionAsync(PermissionDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createPermission.Id }, createPermission);
+                var createPermission = await _PermissionBusiness.CreatePermissionAsync(permissionDto);
+                _logger.LogInformation("permiso creado con ID: {PermissionId}", createPermission.Id);
+                return CreatedAtAction(nameof(GetPermissionById), new { id = createPermission.Id }, createPermission);
             }
-            catch (ValidationException ex)
-            {
-                _logger.LogWarning(ex, "Validación fallida al crear permiso");
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (ExternalServiceException ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear permiso");
                 return StatusCode(500, new { message = ex.Message });
             }
-
-            //BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
-            //NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
-            //StatusCode = Este método te permite devolver cualquier código de estado HTTP.
         }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(PermissionDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PermissionDto permissionDto)
+        {
+            try
+            {
+                var updatedPermission = await _PermissionBusiness.UpdatePermissionAsync(id, permissionDto);
+                return Ok(updatedPermission);
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al actualizar Permission con ID: {PermissionId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Permission no encontrado con ID: {PermissionId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al actualizar Permission con ID: {PermissionId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]  
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            try
+            {
+                var result = await _PermissionBusiness.DeletePermissionAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "permission no encontrado" });
+                }
+                return NoContent();
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar permission con ID: {permissionId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "permission no encontrado con ID: {permissionId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar permission con ID: {permissionId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
     }
 }

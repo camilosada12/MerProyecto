@@ -19,6 +19,32 @@ builder.Services.AddScoped<RolBusiness>();
 builder.Services.AddScoped<UserData>();
 builder.Services.AddScoped<UserBusiness>();
 
+builder.Services.AddScoped<FormData>();
+builder.Services.AddScoped<FormBusiness>();
+
+builder.Services.AddScoped<ModuleData>();
+builder.Services.AddScoped<ModuleBusinness>();
+
+builder.Services.AddScoped<PermissionData>();
+builder.Services.AddScoped<PermissionBusinness>();
+
+builder.Services.AddScoped<PersonData>();
+builder.Services.AddScoped<PersonBusiness>();
+
+builder.Services.AddScoped<RolUserData>();
+builder.Services.AddScoped<UserRolBusiness>();
+
+builder.Services.AddScoped<ModuleData>();
+builder.Services.AddScoped<ModuleBusinness>();
+
+builder.Services.AddScoped<ModuleFormData>();
+builder.Services.AddScoped<ModuleFormBusinness>();
+
+
+builder.Services.AddScoped<RolFormPermissionData>();
+builder.Services.AddScoped<RolFormPermissionBusiness>();
+
+
 var OrigenesPermitidos = builder.Configuration.GetValue<string>("OrígenesPermitidos");
 Console.WriteLine($"OrígenesPermitidos: {OrigenesPermitidos}");
 

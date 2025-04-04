@@ -39,6 +39,14 @@ namespace Entity.Contexts
 
         public DbSet<User> usermulta { get; set; }  // Agregar esta línea
         public DbSet<Rol> rol { get; set; }  // Agregar esta línea
+        public DbSet<Form> form { get; set; }
+        public DbSet<Model.Module> module { get; set; }
+        public DbSet<Permission> permission { get; set; }
+        public DbSet<Person> person { get; set; }
+        public DbSet<RolUser> roluser { get; set; }
+        public DbSet<ModuleForm> moduleform { get; set; }
+
+        public DbSet<RolFormPermission> rolformpermission { get; set; }
 
         /// <summary>
         /// Configura los modelos de la base de datos aplicando configuraciones desde ensamblados.
@@ -120,6 +128,12 @@ namespace Entity.Contexts
             using var command = new DapperEFCoreCommand(this, text, parameters, timeout, type, CancellationToken.None);
             var connection = this.Database.GetDbConnection();
             return await connection.QueryFirstOrDefaultAsync<T>(command.Definition);
+        }
+        public async Task<int> ExecuteAsync(String text, object parametres = null, int? timeout = null, CommandType? type = null)
+        {
+            using var command = new DapperEFCoreCommand(this, text, parametres, timeout, type, CancellationToken.None);
+            var connection = this.Database.GetDbConnection();
+            return await connection.ExecuteAsync(command.Definition);
         }
 
         /// <summary>

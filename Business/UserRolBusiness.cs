@@ -22,7 +22,7 @@ namespace Business
         {
             try
             {
-                var Roles = await _RolUserData.GetAllAsync();
+                var Roles = await _RolUserData.GetAllRolUserAsync();
                 var RolDto = MapToDTOList(Roles);
 
                 return RolDto;
@@ -34,30 +34,29 @@ namespace Business
             }
         }
 
-        // Atributo para obtener un RolUser por ID como DTO
-        public async Task<RolUserDto> GetByIdAsync(int id)
+        // Método para obtener un rol users por ID como DTO
+        public async Task<RolUserDto> GetRolUserByIdAsync(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se intentó obtener un RolUser con ID inválido: {RolUserId}", id);
-                throw new Utilities.Exceptions.ValidationException("id", "El ID del RolUser debe ser mayor que cero");
+                _logger.LogWarning("Se intentó obtener un rol de usuario con ID inválido: {RolUserId}", id);
+                throw new Utilities.Exceptions.ValidationException("id", "El ID del rol de usuario debe ser mayor que cero");
             }
-
             try
             {
-                var Roles = await _RolUserData.GetByIdAsync(id);
-                if (Roles == null)
+                var roluser = await _RolUserData.GetByIdAsync(id);
+                if (roluser == null)
                 {
-                    _logger.LogInformation("No se encontró ningún RolUser con ID: {RolUserId}", id);
-                    throw new EntityNotFoundException("Permiso", "No se encontró el permiso");
+                    _logger.LogInformation("No se encontró ningún usuario con ID: {RolUserId}", id);
+                    throw new EntityNotFoundException("Usuario", id);
                 }
 
-                return MapToDTO(Roles);
+                return MapToDTO(roluser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el RolUser con ID: {RolUserId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al recuperar el RolUser con ID {id}", ex);
+                _logger.LogError(ex, "Error al obtener el usuario con ID: {RolUserId}", id);
+                throw new ExternalServiceException("Base de datos", $"Error al recuperar el usuario con ID {id}", ex);
             }
         }
 
@@ -70,7 +69,7 @@ namespace Business
 
                 var RolUser = MapToEntity(RolUserDto);
 
-                var RolUserCreado = await _RolUserData.CreateAsync(RolUser);
+                var RolUserCreado = await _RolUserData.CreateAsyncSql(RolUser);
 
                 return MapToDTO(RolUserCreado);
             }
@@ -83,38 +82,49 @@ namespace Business
         }
 
 
-        public async Task<RolUserDto> UpdateRolUserAsync(RolUserDto RolUserDTO)
+        public async Task<RolUserDto> UpdateRolUserAsync(RolUserDto rolUserDto)
         {
             try
             {
-                ValidateRolUser(RolUserDTO);
-                var existingRolUser = await _RolUserData.GetByIdAsync(RolUserDTO.Id);
+                ValidateRolUser(rolUserDto);
+
+                var existingRolUser = await _RolUserData.GetByIdAsync(rolUserDto.Id);
                 if (existingRolUser == null)
                 {
-                    throw new EntityNotFoundException("RolUserDto", "No se encontró la relación RolUserDto");
+                    throw new EntityNotFoundException("RolUser", $"No se encontró el RolUser con ID ");
                 }
+
+                // Convertir la fecha a UTC antes de actualizar
+                existingRolUser.rolid = rolUserDto.RolId;
+                existingRolUser.userid = rolUserDto.UserId;
 
                 var success = await _RolUserData.UpdateAsync(existingRolUser);
 
                 if (!success)
                 {
-                    throw new Exception("No se pudo actualizar la relación RolUserDto.");
+                    throw new Exception("No se pudo actualizar el RolUser.");
                 }
 
                 return MapToDTO(existingRolUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la relación RolUserDto");
-                throw new ExternalServiceException("Base de datos", "Error al actualizar la relación RolUserDto", ex);
+                _logger.LogError(ex, $"Error al actualizar el RolUser con ID ");
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el RolUser", ex);
             }
         }
 
         // Método para eliminar una relación  RolUser de manera permanente
-        public async Task<bool> DeleteRolUserPermanentAsync(int id)
+        public async Task<bool> DeleteRolUserAsync(int id)
         {
             try
             {
+                var existingRoLUser = await _RolUserData.GetByIdAsync(id);
+                if (existingRoLUser == null)
+                {
+                    throw new EntityNotFoundException("Rol User", id);
+                }
+
                 return await _RolUserData.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -138,9 +148,9 @@ namespace Business
         {
             return new RolUserDto
             {
-                Id = RolUser.Id,
-                RolId = RolUser.RolId,
-                UserId = RolUser.UserId // Si existe en la entidad
+                Id = RolUser.id,
+                RolId = RolUser.rolid,
+                UserId = RolUser.userid // Si existe en la entidad
             };
         }
 
@@ -149,9 +159,9 @@ namespace Business
         {
             return new RolUser
             {
-                Id = RolUserDto.Id,
-                RolId = RolUserDto.RolId,
-                UserId = RolUserDto.UserId // Si existe en la entidad
+                id = RolUserDto.Id,
+                rolid = RolUserDto.RolId,
+                userid = RolUserDto.UserId // Si existe en la entidad
             };
         }
 

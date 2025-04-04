@@ -63,3 +63,43 @@ F:\Security\Business\obj\Debug\net8.0\Business.dll
 F:\Security\Business\obj\Debug\net8.0\refint\Business.dll
 F:\Security\Business\obj\Debug\net8.0\Business.pdb
 F:\Security\Business\obj\Debug\net8.0\ref\Business.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Business.deps.json
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Business.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Business.pdb
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Data.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Entity.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Utilities.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Data.pdb
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Entity.pdb
+C:\Users\Juan Manuel\Desktop\Security\Business\bin\Debug\net8.0\Utilities.pdb
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.AssemblyReference.cache
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.AssemblyInfoInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.AssemblyInfo.cs
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.CoreCompileInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.sourcelink.json
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.Up2Date
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\refint\Business.dll
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\Business.pdb
+C:\Users\Juan Manuel\Desktop\Security\Business\obj\Debug\net8.0\ref\Business.dll
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Business.deps.json
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Business.dll
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Business.pdb
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Data.dll
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Entity.dll
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Utilities.dll
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Data.pdb
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Entity.pdb
+C:\Users\SENA\Desktop\Security\Business\bin\Debug\net8.0\Utilities.pdb
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.AssemblyReference.cache
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.AssemblyInfoInputs.cache
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.AssemblyInfo.cs
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.CoreCompileInputs.cache
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.sourcelink.json
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.csproj.Up2Date
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.dll
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\refint\Business.dll
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\Business.pdb
+C:\Users\SENA\Desktop\Security\Business\obj\Debug\net8.0\ref\Business.dll

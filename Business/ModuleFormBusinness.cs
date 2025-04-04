@@ -26,7 +26,7 @@ namespace Business
         {
             try
             {
-                var Modules = await _ModuleFormData.GetAllAsync();
+                var Modules = await _ModuleFormData.GetAllModuleFormAsync();
                 var ModulesDTO = MapToDTOList(Modules);
 
                 return ModulesDTO;
@@ -39,7 +39,7 @@ namespace Business
         }
 
         // Atributo para obtener un ModuleForm por ID como DTO
-        public async Task<ModuleFormDto> GetByIdAsync(int id)
+        public async Task<ModuleFormDto> GetByModuleFormIdAsync(int id)
         {
             if (id <= 0)
             {
@@ -66,7 +66,7 @@ namespace Business
         }
 
         // Atributo para crear un ModuleForm desde un DTO
-        public async Task<ModuleFormDto> CreateModuleForAsync(ModuleFormDto ModuleFormDto)
+        public async Task<ModuleFormDto> CreateModuleFormAsync(ModuleFormDto ModuleFormDto)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace Business
 
                 var ModuleForm = MapToEntity(ModuleFormDto);
 
-                var ModuleFormCreado = await _ModuleFormData.CreateAsync(ModuleForm);
+                var ModuleFormCreado = await _ModuleFormData.CreateModuleFormAsyncSql(ModuleForm);
 
                 return MapToDTO(ModuleFormCreado);
             }
@@ -98,6 +98,11 @@ namespace Business
                     throw new EntityNotFoundException("ModuleFormDto", "No se encontró la relación FormModule");
                 }
 
+
+                // Convertir la fecha a UTC antes de actualizar
+                existingModuleForm.moduleid = moduleForDTO.ModuleId;
+                existingModuleForm.formid = moduleForDTO.FormId;
+
                 var success = await _ModuleFormData.UpdateAsync(existingModuleForm);
 
                 if (!success)
@@ -114,17 +119,23 @@ namespace Business
             }
         }
 
-        // Método para eliminar una relación FormModule de manera permanente
-        public async Task<bool> DeleteModuleFormPermanentAsync(int id)
+        // Método para eliminar una relación  RolUser de manera permanente
+        public async Task<bool> DeleteModuleFormAsync(int id)
         {
             try
             {
+                var existingModuleForm = await _ModuleFormData.GetByIdAsync(id);
+                if (existingModuleForm == null)
+                {
+                    throw new EntityNotFoundException("Rol User", id);
+                }
+
                 return await _ModuleFormData.DeleteAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar permanentemente la relación FormModule");
-                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación FormModule", ex);
+                _logger.LogError(ex, "Error al eliminar permanentemente la relación  RolUser");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación  RolUser", ex);
             }
         }
 
@@ -142,9 +153,9 @@ namespace Business
         {
             return new ModuleFormDto
             {
-                Id = ModuleForm.Id,
-                FormId = ModuleForm.FormId,
-                ModuleId = ModuleForm.ModuleId // Si existe en la entidad
+                Id = ModuleForm.id,
+                FormId = ModuleForm.formid,
+                ModuleId = ModuleForm.moduleid // Si existe en la entidad
             };
         }
 
@@ -153,9 +164,9 @@ namespace Business
         {
             return new ModuleForm
             {
-                Id = ModuleFormDto.Id,
-                FormId = ModuleFormDto.FormId,
-                ModuleId = ModuleFormDto.ModuleId // Si existe en la entidad
+                id = ModuleFormDto.Id,
+                formid = ModuleFormDto.FormId,
+                moduleid = ModuleFormDto.ModuleId // Si existe en la entidad
             };
         }
 

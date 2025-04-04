@@ -3,6 +3,7 @@ using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Data
 {
@@ -35,16 +36,16 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<IEnumerable<Person>> GetAllAsyncSQL()
+        public async Task<IEnumerable<Person>> GetAllPersonAsyncSQL()
         {
 
-            string query = "SELECT * FROM Person";
-            return (IEnumerable<Person>)await _context.QueryAsync<IEnumerable<Person>>(query);
+            string query = "SELECT * FROM person";
+            return await _context.Set<Person>().FromSqlRaw(query).ToListAsync();
         }
 
 
         //Atributo Linq
-        public async Task<Person?> GetByIdAsync(int id)
+        public async Task<Person?> GetByIdAsyncLinq(int id)
         {
             try
             {
@@ -58,29 +59,19 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Person?> GetByIdAsyncSQL(Person id)
+        public async Task<Person?> GetByIdAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL con parámetro para el Id
-                var query = "SELECT * FROM Person WHERE Id = @id";
+                var query = "SELECT * FROM person WHERE id = @Id";  // "id" en minúsculas
+                var parametro = new NpgsqlParameter("@Id", id);
 
-                var parametros = new SqlParameter[]
-                {
-                    new SqlParameter("@id", id.Id),
-                };
-
-                // Ejecutar la consulta y obtener el Id del nuevo Person
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametros);
-
-                // Obtener el Person recién insertado con el Id generado
-                id.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
-                return id;
+                return await _context.Set<Person>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Person con el Id {Id}", id);
-                throw; // Re-lanza la excepción para ser manejada en las capas superiores
+                _logger.LogError(ex, "Error al obtener el Person con el Id {id}", id);
+                throw;
             }
         }
 
@@ -107,33 +98,28 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Person> CreateAsyncSQL(Person persons)
+        public async Task<Person> CreatePersonAsyncSQL(Person person)
         {
             try
             {
-                // SQL para insertar en la tabla Users
-                var query = "INSERT INTO Person (name , lastName, phone) " +
-                          "VALUES (@name, @lastName , @phone);" +
-                          "SELECT SCOPE_IDENTITY();"; // Esto devuelve el Id del usuario insertado
+                const string query = @"
+                   INSERT INTO public.person(
+	                name, lastname, phone)
+	                VALUES (@Name, @LastName, @Phone)
+                    RETURNING id;";
 
-                // Ejecutar el comando SQL
-                var parametrosPerson = new SqlParameter[]
+                person.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
-                    new SqlParameter("@name", persons.Name),
-                    new SqlParameter("@lastName", persons.LastName),
-                    new SqlParameter("@phone", persons.Phone)
-                };
+                    Name = person.name,
+                    LastName = person.lastname,
+                    Phone = person.phone
+                });
 
-                // Ejecutar la consulta y obtener el Id del nuevo usuario
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametrosPerson);
-
-                // Obtener el usuario recién insertado con el Id generado
-                persons.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
-                return persons;
+                return person;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el usuario: {ex.Message}");
+                _logger.LogError(ex, "No se pudo agregar la persona.");
                 throw;
             }
         }
@@ -145,7 +131,7 @@ namespace Data
         /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
 
         //Atributo Linq
-        public async Task<bool> UpdateAsync(Person person)
+        public async Task<bool> UpdatePersonAsyncLinq(Person person)
         {
             try
             {
@@ -175,10 +161,10 @@ namespace Data
                 // Parámetros SQL que se pasan a la consulta
                 var parametros = new SqlParameter[]
                 {
-                    new SqlParameter("@name", person.Name),
-                    new SqlParameter("@lastName", person.LastName),
-                    new SqlParameter("@phone", person.Phone),
-                    new SqlParameter("@Id", person.Id),
+                    new SqlParameter("@name", person.name),
+                    new SqlParameter("@lastName", person.lastname),
+                    new SqlParameter("@phone", person.phone),
+                    new SqlParameter("@Id", person.id),
                 };
 
                 // Ejecutar la consulta SQL
@@ -220,25 +206,18 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<bool> DeleteAsyncSQL(int id)
+        public async Task<bool> DeletePermissionAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL para eliminar el usuario con el Id proporcionado
-                var sql = "DELETE FROM Person WHERE Id = @Id";  // Asegúrate de que 'Id' es la columna correcta para identificar al usuario
-
-                // Parámetro SQL que se pasa a la consulta
-                var parametro = new SqlParameter("@Id", id);  // El Id es el único parámetro en este caso
-
-                // Ejecutar la consulta SQL para eliminar el usuario
+                var sql = "DELETE FROM person WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
                 var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
-
-                // Verificar si se eliminó alguna fila (es decir, si el usuario fue encontrado y eliminado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la eliminación fue exitosa
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar el usuario: {ex.Message}");
+                _logger.LogError($"Error al eliminar el usuario: {ex.Message}");
                 return false;
             }
         }

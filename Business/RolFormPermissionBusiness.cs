@@ -22,7 +22,7 @@ namespace Business
         {
             try
             {
-                var rolFormPermissions = await _RolFormPermissionData.GetAllAsync();
+                var rolFormPermissions = await _RolFormPermissionData.GetAllRolFormPermissionAsync();
                 var rolFormPermissionsDto = MapToDTOList(rolFormPermissions);
 
                 return rolFormPermissionsDto;
@@ -35,7 +35,7 @@ namespace Business
         }
 
         // Atributo para obtener un RolFormPermission por ID como DTO
-        public async Task<RolFormPermissionDto> GetByIdAsync(int id)
+        public async Task<RolFormPermissionDto> GetByRolFormModuleIdAsync(int id)
         {
             if (id <= 0)
             {
@@ -45,7 +45,7 @@ namespace Business
 
             try
             {
-                var rolFormPermissionsDto = await _RolFormPermissionData.GetByIdAsync(id);
+                var rolFormPermissionsDto = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(id);
                 if (rolFormPermissionsDto == null)
                 {
                     _logger.LogInformation("No se encontró ningún RolFormPermission con ID: {RolFormPermissionId}", id);
@@ -70,7 +70,7 @@ namespace Business
 
                 var RolFormPermission = MapToEntity(RolFormPermissionDto);
 
-                var RolFormPermissionCreado = await _RolFormPermissionData.CreateAsync(RolFormPermission);
+                var RolFormPermissionCreado = await _RolFormPermissionData.CreateRolFormPermissionAsyncSql(RolFormPermission);
 
                 return MapToDTO(RolFormPermissionCreado);
             }
@@ -88,13 +88,17 @@ namespace Business
             try
             {
                 ValidateRolFormPermission(RolFormPermissionDTO);
-                var existingRolFormPermission = await _RolFormPermissionData.GetByIdAsync(RolFormPermissionDTO.Id);
+                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(RolFormPermissionDTO.Id);
                 if (existingRolFormPermission == null)
                 {
                     throw new EntityNotFoundException("RolFormPermissionDto", "No se encontró la relación RolFormPermissionDto");
                 }
 
-                var success = await _RolFormPermissionData.UpdateAsync(existingRolFormPermission);
+                existingRolFormPermission.rolid = RolFormPermissionDTO.RolId;
+                existingRolFormPermission.formid = RolFormPermissionDTO.FormId;
+                existingRolFormPermission.permissionid = RolFormPermissionDTO.PermissionId;
+
+                var success = await _RolFormPermissionData.UpdateRolFormPermissionAsync(existingRolFormPermission);
 
                 if (!success)
                 {
@@ -111,10 +115,16 @@ namespace Business
         }
 
         // Método para eliminar una relación  RolFormPermission de manera permanente
-        public async Task<bool> DeleteRolFormPermissionPermanentAsync(int id)
+        public async Task<bool> DeleteModuleFormAsync(int id)
         {
             try
             {
+                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(id);
+                if (existingRolFormPermission == null)
+                {
+                    throw new EntityNotFoundException("RolFormPermission ", id);
+                }
+
                 return await _RolFormPermissionData.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -138,10 +148,10 @@ namespace Business
         {
             return new RolFormPermissionDto
             {
-                Id = RolFormPermission.Id,
-                RolId = RolFormPermission.RolId,
-                FormId = RolFormPermission.FormId, // Si existe en la
-                PermissionId = RolFormPermission.PermissionId // Si existe en la entidad
+                Id = RolFormPermission.id,
+                RolId = RolFormPermission.rolid,
+                FormId = RolFormPermission.formid, // Si existe en la
+                PermissionId = RolFormPermission.permissionid // Si existe en la entidad
             };
         }
 
@@ -150,10 +160,10 @@ namespace Business
         {
             return new RolFormPermission
             {
-                Id = RolFormPermissionDto.Id,
-                RolId = RolFormPermissionDto.RolId,
-                FormId = RolFormPermissionDto.FormId,// Si existe en la
-                PermissionId = RolFormPermissionDto.PermissionId // Si existe en la entidad
+                id = RolFormPermissionDto.Id,
+                rolid = RolFormPermissionDto.RolId,
+                formid = RolFormPermissionDto.FormId,// Si existe en la
+                permissionid = RolFormPermissionDto.PermissionId // Si existe en la entidad
             };
         }
 

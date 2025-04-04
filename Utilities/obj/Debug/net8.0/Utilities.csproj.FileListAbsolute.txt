@@ -45,3 +45,27 @@ F:\Security\Utilities\obj\Debug\net8.0\Utilities.dll
 F:\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
 F:\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
 F:\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll
+C:\Users\Juan Manuel\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.deps.json
+C:\Users\Juan Manuel\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.dll
+C:\Users\Juan Manuel\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.pdb
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfoInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfo.cs
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.csproj.CoreCompileInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.sourcelink.json
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.dll
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
+C:\Users\Juan Manuel\Desktop\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll
+C:\Users\SENA\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.deps.json
+C:\Users\SENA\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.dll
+C:\Users\SENA\Desktop\Security\Utilities\bin\Debug\net8.0\Utilities.pdb
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfoInputs.cache
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfo.cs
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.csproj.CoreCompileInputs.cache
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.sourcelink.json
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.dll
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
+C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll

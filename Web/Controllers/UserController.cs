@@ -30,7 +30,7 @@ namespace Web.ContUserlers
         }
 
         /// <summary>
-        /// Obtener todos los forms del sistema
+        /// Obtener todos los User del sistema
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
@@ -39,19 +39,19 @@ namespace Web.ContUserlers
         {
             try
             {
-                var Forms = await _UserBusiness.GetAllUserAsync();
-                return Ok(Forms);
+                var User = await _UserBusiness.GetAllUserAsync();
+                return Ok(User);
             }
             catch (Exception ex)
             {
 
-                _logger.LogError(ex, "Error al obtener los forms");
+                _logger.LogError(ex, "Error al obtener los User");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
 
         ///<summary>
-        /// Obtener un form especificio por su ID
+        /// Obtener un User especificio por su ID
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserDto), 200)]
@@ -67,18 +67,18 @@ namespace Web.ContUserlers
             }
             catch (ValidationException ex)
             {
-                _logger.LogInformation(ex, "Validacion fallida para form con ID: {FormId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para User con ID: {UserId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
 
-                _logger.LogInformation(ex, "Form no encontrado con ID: {FormId}", id);
+                _logger.LogInformation(ex, "User no encontrado con ID: {UserId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener el form con ID: {FormId}", id);
+                _logger.LogError(ex, "Error al obtener el User con ID: {UserId}", id);
                 throw;
             }
         }
@@ -104,7 +104,7 @@ namespace Web.ContUserlers
             {
                 var createUser = await _UserBusiness.CreateUserAsync(UserDto);
                 _logger.LogInformation("Usuario creado con ID: {UserId}", createUser.id);
-                return CreatedAtAction(nameof(GetUserById), new { id = createUser.id }, createUser);
+                return CreatedAtAction(nameof(GetUserById), new { Id = createUser.id }, createUser);
             }
             catch (Exception ex)
             {
@@ -114,34 +114,33 @@ namespace Web.ContUserlers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(UserDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UserDto userDto)
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UserDto userDto)
         {
             try
             {
-                // Convertir la fecha a UTC antes de enviarla a la lógica de negocio
                 userDto.Registrationdate = userDto.Registrationdate.ToUniversalTime();
 
-                var updatedUser = await _UserBusiness.UpdateUserAsync(id, userDto);
+                var updatedUser = await _UserBusiness.UpdateUserAsync(userDto);
                 return Ok(updatedUser);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {UserId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {UserId}");
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Usuario no encontrado con ID: {UserId}", id);
+                _logger.LogInformation(ex, "Usuario no encontrado con ID: {UserId}");
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar usuario con ID: {UserId}", id);
+                _logger.LogError(ex, "Error al actualizar usuario con ID: {UserId}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }

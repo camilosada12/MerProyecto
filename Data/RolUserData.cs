@@ -4,6 +4,7 @@ using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Utilities.Exceptions;
 
 
 namespace Data
@@ -32,21 +33,14 @@ namespace Data
         /// </summary>
         /// <returns>Lista de RolUser</returns>
 
-        //Atributo Linq
-        public async Task<IEnumerable<RolUser>> GetAllAsync()
+        /// <summary>
+        /// Obtiene todos los usuarios almacenados en la base de datos.
+        /// </summary>
+        /// <returns>Lista de Rol con los usuarios</returns>
+        /// 
+        public async Task<IEnumerable<RolUser>> GetAllRolUserAsync()
         {
-            try
-            {
-                return await _context.Set<RolUser>()
-                    .Include(f => f.Rol)  // Relación con Rol
-                    .Include(f => f.User) // Relación con User
-                    .ToListAsync();  // Devuelve la lista de todos los RolUser
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener la lista de RolUsers");
-                throw;
-            }
+            return await _context.Set<RolUser>().ToListAsync();
         }
 
         //Atributo SQL
@@ -77,43 +71,42 @@ namespace Data
             }
         }
 
-        //Metodo Linq
+        /// <summary>
+        /// Obtiene un usuario con un rol especificos por su identificador CON linQ
+        /// </summary>
         public async Task<RolUser?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<RolUser>()
-                    .Include(f => f.Rol)  // Carga la relación con Rol
-                    .Include(f => f.User) // Carga la relación con User
-                    .FirstOrDefaultAsync(f => f.Id == id); // Busca por ID
+                return await _context.Set<RolUser>().FindAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener RolUser con ID {RolUserId}", id);
-                throw; // Relanza la excepción para que sea manejada en capas superiores
+                _logger.LogError(ex, "Error al obtener usuario con su rol con ID {UserRolId}", id);
+                throw;//Re-lanza la excepcion para sea manejada en capas superiores
             }
         }
 
         //Metodo SQL
-        public async Task<RolUserDto?> GetByIdAsyncSQL(int id)
+        public async Task<RolUser?> GetByIdAsyncSQL(int id)
         {
             try
             {
                 string query = @"
-                        SELECT 
+                       SELECT 
                             ru.Id AS RolUserId, 
                             ru.RolId, 
-                            r.Nombre AS RolName, 
+                            r.role AS RolName, 
                             ru.UserId, 
-                            u.Nombre AS UserName
+                            u.user_per AS UserName
                         FROM RolUser ru
-                        INNER JOIN Rol r ON ru.RolId = r.Id
-                        INNER JOIN [User] u ON ru.UserId = u.Id
+                        INNER JOIN rol r ON ru.RolId = r.id
+                        INNER JOIN usermulta u ON ru.UserId = u.id
                         WHERE ru.Id = @Id;";
 
                 var parameters = new { Id = id };
 
-                return await _context.QueryFirstOrDefaultAsync<RolUserDto>(query, parameters);
+                return await _context.QueryFirstOrDefaultAsync<RolUser>(query, parameters);
             }
             catch (Exception ex)
             {
@@ -146,38 +139,40 @@ namespace Data
         }
 
         //Metodo SQL
-        public async Task<RolUser> CreateAsyncSQL(RolUser rolUser)
+        /// <summary>
+        /// Actualiza un usuario con su rol existente en la base de datos
+        /// </summary>
+        /// <param name="user">Objeto con la informacion actualizada</param>
+        /// <returns>True si la operacion fue exitosa, False en caso contrario</returns>
+        /// 
+
+        //Metodo para crear un nuevo rol user con sentencia SQl
+
+        public async Task<RolUser> CreateAsyncSql(RolUser rolUsers)
         {
             try
             {
-                // Consulta SQL para insertar con parámetros
-                var sql = @"
-            INSERT INTO RolUsers (RolId, UserId) 
-            VALUES (@RolId, @UserId);
-        ";
+                string query = @"
+                    INSERT INTO public.roluser(
+	                 rolid, userid)
+	                VALUES (@RolId,@UserId)
+                    RETURNING id;
+                    ";
 
-            // Definir los parámetros para evitar inyecciones SQL
-                var parameters = new[]
+                rolUsers.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
-                new SqlParameter("@RolId", rolUser.RolId),
-                new SqlParameter("@UserId", rolUser.UserId)
-                };  
+                    RolId = rolUsers.rolid,
+                    UserId = rolUsers.userid,
+                });
 
-                // Ejecutar la consulta SQL y obtener el ID insertado
-                var newId = await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-
-                // Retornar el objeto creado con el ID asignado
-                return rolUser;
+                return rolUsers;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear el RolUser");
+                _logger.LogError($"Error al crear el modulo: {ex.Message}");
                 throw;
             }
         }
-
-
-
 
         ///<summary>
         ///Actualiza un nuevo RolUser en la base de datos.
@@ -207,32 +202,30 @@ namespace Data
         {
             try
             {
-                // Consulta SQL para actualizar la entidad RolUser con parámetros
+                // Consulta SQL de actualización
                 var sql = @"
-            UPDATE RolUsers
-            SET 
-                RolId = @RolId, 
-                UserId = @UserId
-            WHERE Id = @Id;
-        ";
+                    UPDATE public.roluser
+                    SET 
+                    rolid = @rolid,
+                    userid = @userid
+                    WHERE id = @id;";
 
-                // Definir los parámetros para evitar inyecciones SQL
-                var parameters = new[]
+
+                var parameters = new
                 {
-            new SqlParameter("@RolId", rolUser.RolId),
-            new SqlParameter("@UserId", rolUser.UserId),
-            new SqlParameter("@Id", rolUser.Id)
-        };
+                    rolUser.id,
+                    rolUser.rolid,
+                    rolUser.userid,
+                };
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
 
-                // Ejecutar la consulta SQL
-                await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-
-                return true;
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el RolUser: {ex.Message}");
-                return false;
+                // Registrar el error en caso de excepción
+                _logger.LogError(ex, $"Error al actualizar el rolUser con ID {rolUser.id}");
+                throw new ExternalServiceException("Base de datos", $"Error al actualizar el RolUser con ID {rolUser.id}", ex);
             }
         }
 

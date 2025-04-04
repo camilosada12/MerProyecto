@@ -101,7 +101,7 @@ namespace Business
                 existingRol.role = RolDto.Role;
                 existingRol.description = RolDto.Description;
 
-                var success = await _rolData.UpdateAsync(existingRol);
+                var success = await _rolData.UpdateAsyncLinq(existingRol);
 
                 if (!success)
                 {

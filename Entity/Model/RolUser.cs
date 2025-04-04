@@ -2,11 +2,13 @@
 {
     public class RolUser
     {
-        public int Id { get; set; }
-        public int RolId { get; set; }
-        public Rol Rol { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
-        public bool IsDeleted { get; set; }
+        public int id { get; set; }
+        public int rolid { get; set; }
+        //public Rol Rol { get; set; }
+        public int userid { get; set; }
+        //public User User { get; set; }
+
+
+
     }
 }

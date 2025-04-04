@@ -2,11 +2,10 @@
 {
     public class Person
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string LastName { get; set; }
-        public int Phone { get; set; }
-        public bool IsDeleted { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string lastname { get; set; }
+        public string phone { get; set; }
         public List<User> User { get; set; } = new List<User>();
     }
 }

@@ -22,19 +22,18 @@ namespace Business
         }
 
         //Atributo para obtener todos los Formulario como DTOs
-        public async Task<IEnumerable<FormDto>> GetAllFormsAsync()
+        public async Task<IEnumerable<FormDto>> GetAllformAsync()
         {
             try
             {
-                var Form = await _formData.GetAllAsync();
-                var FormDTO = MapToDTOList(Form);
-
-                return FormDTO;
+                var form = await _formData.GetAllFormAsyncSQL();
+                var formDTO = MapToDTOList(form);
+                return formDTO;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todos los formularios");
-                throw new ExternalServiceException("base de datos", "Error al recuperar la lista de formularios", ex);
+                _logger.LogError(ex, "Error al obtener todos los form");
+                throw new ExternalServiceException("base de datos", "Error al recuperar la lista de form", ex);
             }
         }
 
@@ -48,7 +47,7 @@ namespace Business
             }
             try
             {
-                var Form = await _formData.GetByIdAsync(id);
+                var Form = await _formData.GetByFormIdAsyncSql(id);
                 if (Form == null)
                 {
                     _logger.LogInformation("No se encontro ningun formulario con ID: {FormID}", id);
@@ -64,37 +63,46 @@ namespace Business
         }
 
         //Atributo para crear un Formulario desde un DTO
-        public async Task<FormDto> createFormAsync(FormDto FormDto)
+        public async Task<FormDto> CreateFormAsync(FormDto formDto)
         {
             try
             {
-                ValidateForm(FormDto);
+                ValidateForm(formDto);
 
-                var Form = MapToEntity(FormDto);
+                var Form = MapToEntity(formDto);
 
-                var FormCreado = await _formData.CreateAsync(Form);
+                // Corrección: Asegurar que se retorna el ID correcto
+                var FormCreado = await _formData.CreateAsyncSQL(Form);
+                _logger.LogInformation("Usuario insertado con ID: {formId}", FormCreado.id);
 
                 return MapToDTO(FormCreado);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear nuevo Formulario: {FormNombre}", FormDto?.Name ?? "null");
-                throw new ExternalServiceException("Base de datos", "Error al crear el Formulario", ex);
+                _logger.LogError(ex, "Error al crear nuevo Rol : {formNombre}", formDto?.Name ?? "null");
+                throw new ExternalServiceException("base de datos ", "Error al crear el Rol", ex);
             }
         }
 
-        public async Task<FormDto> UpdateFormAsync(FormDto formDto)
+        public async Task<FormDto> UpdateFormAsync(int id ,FormDto formDto)
         {
             try
             {
                 ValidateForm(formDto);
-                var existingForm = await _formData.GetByIdAsync(formDto.Id);
+
+                var existingForm = await _formData.GetByIdAsyncLinq(id);
                 if (existingForm == null)
                 {
-                    throw new EntityNotFoundException("Form", "No se encontró la relación Form");
+                    throw new EntityNotFoundException("Form", $"No se encontró la relación con {formDto.Id}");
                 }
 
-                var success = await _formData.UpdateAsync(existingForm);
+                // Convertir la fecha a UTC antes de actualizar
+                existingForm.name = formDto.Name;
+                existingForm.description = formDto.Description;
+                existingForm.statu = formDto.statu;
+                existingForm.datacreation = formDto.DateCreation.ToUniversalTime();
+
+                var success = await _formData.UpdateAsyncLinq(existingForm);
 
                 if (!success)
                 {
@@ -111,11 +119,11 @@ namespace Business
         }
 
         // Método para eliminar una relación Form de manera lógica
-        public async Task<bool> DeleteFormModuleLogicalAsync(int id)
+        public async Task<bool> DeleteFormAsync(int id)
         {
             try
             {
-                return await _formData.DeleteAsync(id);
+                return await _formData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
             {
@@ -140,28 +148,28 @@ namespace Business
         }
 
         //Atributo para Mapear de Form a FormDTO
-        private FormDto MapToDTO(Form Form)
+        private FormDto MapToDTO(Form form)
         {
             return new FormDto
             {
-                Id = Form.Id,
-                Name = Form.Name,
-                Description = Form.Description,
-                DateCreation = Form.DateCreation,
-                statu = Form.statu
+                Id = form.id,
+                Name = form.name,
+                Description = form.description,
+                DateCreation = form.datacreation,
+                statu = form.statu
             };
         }
 
         // Atributo para mapear de FormDTO a Form
-        private Form MapToEntity(FormDto FormDto)
+        private Form MapToEntity(FormDto formDto)
         {
             return new Form
             {
-                Id = FormDto.Id,
-                Name = FormDto.Name,
-                Description = FormDto.Description,
-                DateCreation = FormDto.DateCreation,
-                statu = FormDto.statu
+                id = formDto.Id,
+                name = formDto.Name,
+                description = formDto.Description,
+                datacreation = formDto.DateCreation,
+                statu = formDto.statu
             };
         }
 

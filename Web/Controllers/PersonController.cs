@@ -28,39 +28,57 @@ namespace Web.Controllers
             _logger = logger;
         }
 
-        ///<summary>
-        ///obtiene todos los permisos del sistema
+        /// <summary>
+        /// Obtener todos los person del sistema
         /// </summary>
-        /// <response code"200">Retorna la lista de permisos</response>
-        /// <response code="400">ID proporcionado no válido</response>
-        /// <response code="404">Permiso no encontrado</response>
-        /// <response code"500">Error interno del servidor</response>
-        [HttpGet("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PersonDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetAllForms()
         {
             try
             {
-                var Person = await _PersonBusiness.GetAllPersonAsync(); // obtiene la lista de Personas desde la capa de negocio.
-                return Ok(Person); //Devuelve un 200 OK con los datos
+                var person = await _PersonBusiness.GetAllPersonAsync();
+                return Ok(person);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error al obtener los person");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        ///<summary>
+        /// Obtener un User especificio por su ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PersonDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetPersonById(int id)
+        {
+            try
+            {
+                var Person = await _PersonBusiness.GetByPersonIdAsync(id);
+                return Ok(Person);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {PersonId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para Person con ID: {PersonId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {PersonId}", id);
+
+                _logger.LogInformation(ex, "Person no encontrado con ID: {PersonId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {PersonId}", id);
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener el Person con ID: {PersonId}", id);
+                throw;
             }
         }
 
@@ -77,27 +95,84 @@ namespace Web.Controllers
         [ProducesResponseType(typeof(PersonDto), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> creadoPerson([FromBody] PersonDto PersonDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+
+        public async Task<IActionResult> creadoPerson([FromBody] PersonDto PersonDto)
         {
+            _logger.LogInformation("Recibiendo petición para crear Person");
             try
             {
                 var createPerson = await _PersonBusiness.CreatePersonAsync(PersonDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createPerson.Id }, createPerson);
+                _logger.LogInformation("Person creado con ID: {PersonId}", createPerson.Id);
+                return CreatedAtAction(nameof(GetPersonById), new { id = createPerson.Id }, createPerson);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear Person");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(PersonDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PersonDto personDto)
+        {
+            try
+            {
+                var updatedPerson = await _PersonBusiness.UpdatePersonAsync(id, personDto);
+                return Ok(updatedPerson);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al crear permiso");
+                _logger.LogWarning(ex, "Validación fallida al actualizar Persona con ID: {PersonId}", id);
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Persona no encontrado con ID: {PersonId}", id);
+                return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al crear permiso");
+                _logger.LogError(ex, "Error al actualizar Persona con ID: {PersonId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
-
-            //BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
-            //NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
-            //StatusCode = Este método te permite devolver cualquier código de estado HTTP.
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeletePersonAsync(int id)
+        {
+            try
+            {
+                var result = await _PersonBusiness.DeletePersonAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Persona no encontrado" });
+                }
+                return NoContent();
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar Persona con ID: {PersonId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Persona no encontrado con ID: {PersonId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar Persona con ID: {PersonId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
     }
 }

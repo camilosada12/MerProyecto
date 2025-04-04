@@ -29,39 +29,57 @@ namespace Web.Controllers
             _logger = logger;
         }
 
-        ///<summary>
-        ///obtiene todos los permisos del sistema
+        /// <summary>
+        /// Obtener todos los rol user del sistema
         /// </summary>
-        /// <response code"200">Retorna la lista de permisos</response>
-        /// <response code="400">ID proporcionado no válido</response>
-        /// <response code="404">Permiso no encontrado</response>
-        /// <response code"500">Error interno del servidor</response>
-        [HttpGet("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ModuleFormDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetAllModuleForm()
         {
             try
             {
-                var ModuleForm = await _ModuleFormBusiness.GetAllModuleFormAsync(); // obtiene la lista de ModuleFormes desde la capa de negocio.
-                return Ok(ModuleForm); //Devuelve un 200 OK con los datos
+                var ModuleForm = await _ModuleFormBusiness.GetAllModuleFormAsync();
+                return Ok(ModuleForm);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error al obtener los ModuleForm ");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        ///<summary>
+        /// Obtener un module especificio por su ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ModuleFormDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetModuleFormById(int id)
+        {
+            try
+            {
+                var ModuleForm = await _ModuleFormBusiness.GetByModuleFormIdAsync(id);
+                return Ok(ModuleForm);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {ModuleFormId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para ModuleForm user con ID: {ModuleFormUserId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {ModuleFormId}", id);
+
+                _logger.LogInformation(ex, "Form no encontrado con ID: {ModuleFormUserId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {ModuleFormId}", id);
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener el ModuleForm user con ID: {ModuleFormUserId}", id);
+                throw;
             }
         }
 
@@ -78,27 +96,90 @@ namespace Web.Controllers
         [ProducesResponseType(typeof(ModuleFormDto), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> creadoModuleForm([FromBody] ModuleFormDto ModuleFormDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+        public async Task<IActionResult> CreateModuleForm([FromBody] ModuleFormDto moduleFormDto)
         {
             try
             {
-                var createModuleForm = await _ModuleFormBusiness.CreateModuleForAsync(ModuleFormDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createModuleForm.Id }, createModuleForm);
+                var createdModuleForm = await _ModuleFormBusiness.CreateModuleFormAsync(moduleFormDto);
+                return CreatedAtAction(nameof(GetModuleFormById), new { id = createdModuleForm.Id }, createdModuleForm);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al crear permiso");
+                _logger.LogWarning(ex, "Validacion fallida al creal el Module Form");
                 return BadRequest(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al crear permiso");
+                _logger.LogError(ex, "Error al crear el Module Form");
                 return StatusCode(500, new { message = ex.Message });
             }
-
-            //BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
-            //NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
-            //StatusCode = Este método te permite devolver cualquier código de estado HTTP.
         }
+
+        /// <summary>
+        /// Actualiza un form existente en el sistema
+        /// </summary>
+        [HttpPut]
+        [ProducesResponseType(typeof(ModuleFormDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateRolUser([FromBody] ModuleFormDto moduleFormDto)
+        {
+            try
+            {
+
+                if (moduleFormDto == null || moduleFormDto.Id <= 0)
+                {
+                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
+                }
+
+                var updatedmoduleForm = await _ModuleFormBusiness.UpdateModuleFormAsync(moduleFormDto);
+
+                return Ok(updatedmoduleForm);
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al actualizar el moduleForm con ID: {moduleFormId}");
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el module con ID: {moduleFormId}");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al actualizar el module con ID: {moduleFormId}");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina un form del sistema
+        /// </summary>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteRolUser(int id)
+        {
+            try
+            {
+                var deleted = await _ModuleFormBusiness.DeleteModuleFormAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "rol user no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "rol user eliminado exitosamente" });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el rol user con ID: {RolUserId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using Business;
+using Data;
 using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
@@ -33,39 +34,57 @@ namespace Web.Controllers
             _logger = logger;
         }
 
-        ///<summary>
-        ///obtiene todos los permisos del sistema
+        /// <summary>
+        /// Obtener todos los forms del sistema
         /// </summary>
-        /// <response code"200">Retorna la lista de permisos</response>
-        /// <response code="400">ID proporcionado no válido</response>
-        /// <response code="404">Permiso no encontrado</response>
-        /// <response code"500">Error interno del servidor</response>
-        [HttpGet("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FormDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetAllForms()
         {
             try
             {
-                var Form = await _FormBusiness.GetAllFormsAsync(); // obtiene la lista de Formes desde la capa de negocio.
-                return Ok(Form); //Devuelve un 200 OK con los datos
+                var Forms = await _FormBusiness.GetAllformAsync();
+                return Ok(Forms);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error al obtener los forms");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        ///<summary>
+        /// Obtener un form especificio por su ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(FormDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetFormById(int id)
+        {
+            try
+            {
+                var form = await _FormBusiness.GetFormByAsync(id);
+                return Ok(form);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida para el permiso con ID: {FormId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para form con ID: {formId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Permiso no encontrado con ID: {FormId}", id);
+
+                _logger.LogInformation(ex, "form no encontrado con ID: {formId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener permiso con ID: {FormId}", id);
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener el form con ID: {formId}", id);
+                throw;
             }
         }
 
@@ -82,27 +101,89 @@ namespace Web.Controllers
         [ProducesResponseType(typeof(FormDto), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> creadoForm([FromBody] FormDto FormDto) // [FromBody] indica que los datos se recibirán en el cuerpo de la solicitud en formato JSON.
+
+        public async Task<IActionResult> creadoform([FromBody] FormDto formDto)
+        {
+            _logger.LogInformation("Recibiendo petición para crear  un form");
+            try
+            {
+                var createform = await _FormBusiness.CreateFormAsync(formDto);
+                _logger.LogInformation("Usuario creado con ID: {formId}", createform.Id);
+                return CreatedAtAction(nameof(GetFormById), new { id = createform.Id }, createform);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear usuario");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(FormDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] FormDto formDto)
         {
             try
             {
-                var createForm = await _FormBusiness.createFormAsync(FormDto);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createForm.Id }, createForm);
+                // Convertir la fecha a UTC antes de enviarla a la lógica de negocio
+                formDto.DateCreation = formDto.DateCreation.ToUniversalTime();
+
+                var updatedForm = await _FormBusiness.UpdateFormAsync(id, formDto);
+                return Ok(updatedForm);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al crear permiso");
+                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {FormId}", id);
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Usuario no encontrado con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al crear permiso");
+                _logger.LogError(ex, "Error al actualizar usuario con ID: {FormId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
-
-            //BadRequest = se usa cuando la solicitud del cliente no es válida. Devuelve un HTTP 400 (Bad Request) con un mensaje de error
-            //NotFound = Se usa cuando el recurso solicitado no existe. Devuelve un HTTP 404 (Not Found).
-            //StatusCode = Este método te permite devolver cualquier código de estado HTTP.
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            try
+            {
+                var result = await _FormBusiness.DeleteFormAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Usuario no encontrado" });
+                }
+                return NoContent();
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar usuario con ID: {FormId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Usuario no encontrado con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar usuario con ID: {FormId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
     }
 }
+
+

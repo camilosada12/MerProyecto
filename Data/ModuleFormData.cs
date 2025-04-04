@@ -30,12 +30,9 @@ namespace Data
         /// <returns>lista de ModuleForm </returns>
 
         //Atributo Linq
-        public async Task<IEnumerable<ModuleForm>> GetAllAsync()
+        public async Task<IEnumerable<ModuleForm>> GetAllModuleFormAsync()
         {
-            return await _context.Set<ModuleForm>()
-            .Include(f => f.Module) // Relación con Module
-            .Include(f => f.Form) // Relación con Form
-            .ToListAsync(); // Ejecuta la consulta;
+            return await _context.Set<ModuleForm>().ToListAsync();
         }
 
         //Atributo SQL        
@@ -64,17 +61,28 @@ namespace Data
         ///<param name="moduleForm">instancia del ModuleForm a crear </param>
         ///<returns> El ModuleForm creado.</returns>
 
-        public async Task<ModuleForm> CreateAsync(ModuleForm moduleForm)
+        public async Task<ModuleForm> CreateModuleFormAsyncSql(ModuleForm moduleForm)
         {
             try
             {
-                await _context.Set<ModuleForm>().AddAsync(moduleForm);
-                await _context.SaveChangesAsync();
+                string query = @"
+                    INSERT INTO public.moduleform(
+	                formid, moduleid)
+	                VALUES (@formid,@moduleid)
+                    RETURNING id;
+                    ";
+
+                moduleForm.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    formid = moduleForm.formid,
+                    moduleid = moduleForm.moduleid,
+                });
+
                 return moduleForm;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el ModuleForm: {ex.Message}");
+                _logger.LogError($"Error al crear el modulo: {ex.Message}");
                 throw;
             }
         }
@@ -92,15 +100,15 @@ namespace Data
                 // Definir los parámetros para la consulta SQL
                 var parametros = new SqlParameter[]
                 {
-            new SqlParameter("@moduleId", moduleForm.Module),  // Cambia Field1, Field2, Field3 por los nombres reales
-            new SqlParameter("@formId", moduleForm.Form),
+            new SqlParameter("@moduleId", moduleForm.moduleid),  // Cambia Field1, Field2, Field3 por los nombres reales
+            new SqlParameter("@formId", moduleForm.formid),
                 };
 
                 // Ejecutar la consulta SQL y obtener el Id del nuevo registro
                 var result = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
 
                 // Asignar el Id devuelto al objeto moduleForm
-                moduleForm.Id = Convert.ToInt32(result); // Asumiendo que SCOPE_IDENTITY devuelve un int
+                moduleForm.id = Convert.ToInt32(result); // Asumiendo que SCOPE_IDENTITY devuelve un int
                 return moduleForm;
             }
             catch (Exception ex)
@@ -146,9 +154,9 @@ namespace Data
                 // Definir los parámetros para la consulta SQL
                 var parametros = new SqlParameter[]
                 {
-            new SqlParameter("@moduleId", moduleForm.Module),  // Asignar el nuevo valor para ModuleId
-            new SqlParameter("@formId", moduleForm.Form),      // Asignar el nuevo valor para FormId
-            new SqlParameter("@id", moduleForm.Id)             // Identificar el registro por su Id
+            new SqlParameter("@moduleId", moduleForm.moduleid),  // Asignar el nuevo valor para ModuleId
+            new SqlParameter("@formId", moduleForm.formid),      // Asignar el nuevo valor para FormId
+            new SqlParameter("@id", moduleForm.id)             // Identificar el registro por su Id
                 };
 
                 // Ejecutar la consulta SQL

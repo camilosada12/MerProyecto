@@ -4,6 +4,7 @@ using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Data
 {
@@ -37,12 +38,12 @@ namespace Data
         //Atributo SQL
         public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
         {
-            string query = "SELECT * FROM Permission";
-            return (IEnumerable<Permission>)await _context.QueryAsync<IEnumerable<Permission>>(query);
+            string query = "SELECT * FROM permission";
+            return await _context.Set<Permission>().FromSqlRaw(query).ToListAsync();
         }
 
         //Atributo Linq
-        public async Task<Permission?> GetByIdAsync(int id)
+        public async Task<Permission?> GetPermissionByIdAsync(int id)
         {
             try
             {
@@ -56,29 +57,19 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Permission?> GetByIdAsyncSQL(Permission id)
+        public async Task<Permission?> GetByPermissionIdAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL con parámetro para el Id
-                var query = "SELECT * FROM Permission WHERE Id = @id";  // Asegúrate de que el nombre de la tabla sea correcto
+                var query = "SELECT * FROM permission WHERE id = @Id";  // "id" en minúsculas
+                var parametro = new NpgsqlParameter("@Id", id);
 
-                var parametros = new SqlParameter[]
-                {
-                    new SqlParameter("@id", id.Id),
-                };
-
-                // Ejecutar la consulta y obtener el Id del nuevo Permission
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametros);
-
-                // Obtener el Permission recién insertado con el Id generado
-                id.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
-                return id;
+                return await _context.Set<Permission>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Permission con el Id {Id}", id);
-                throw; // Re-lanza la excepción para ser manejada en las capas superiores
+                _logger.LogError(ex, "Error al obtener el Permission con el Id {id}", id);
+                throw;
             }
         }
 
@@ -105,32 +96,27 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Permission> CreateAsyncSQL(Permission permission)
+        public async Task<Permission> CreatePermissionAsyncSQL(Permission permission)
         {
             try
             {
-                // SQL para insertar en la tabla Users
-                var sql = "INSERT INTO Permission (Name, Description) " +
-                          "VALUES (@name, @description);" +
-                          "SELECT SCOPE_IDENTITY();"; // Esto devuelve el Id del usuario insertado
+                const string query = @"
+                    INSERT INTO public.""permission""(
+	                ""name"", ""description"")
+	                VALUES (@Name,@Description);
+                    RETURNING id;";
 
-                // Ejecutar el comando SQL
-                var parametros = new SqlParameter[]
+                permission.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
-                    new SqlParameter("@name", permission.Name),
-                    new SqlParameter("@description", permission.Description),
-                };
+                    Name = permission.name,
+                    Description = permission.description,
+                });
 
-                // Ejecutar la consulta y obtener el Id del nuevo usuario
-                var result = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
-
-                // Obtener el usuario recién insertado con el Id generado
-                permission.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
                 return permission;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el usuario: {ex.Message}");
+                _logger.LogError(ex, "No se pudo agregar el Permission.");
                 throw;
             }
         }
@@ -162,8 +148,8 @@ namespace Data
         {
             try
             {
-                // Consulta SQL para actualizar el usuario
-                var sql = "UPDATE Users SET " +
+                // Consulta SQL para actualizar el Permission
+                var sql = "UPDATE permission SET " +
                           "Name = @name, " +
                           "Description = @description, " +
                           "WHERE Id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
@@ -171,20 +157,20 @@ namespace Data
                 // Parámetros SQL que se pasan a la consulta
                 var parametros = new SqlParameter[]
                 {
-                      new SqlParameter("@name", permission.Name),
-                      new SqlParameter("@description", permission.Description),
-                      new SqlParameter("@Id", permission.Id) // El ID es necesario para la condición WHERE
+                      new SqlParameter("@name", permission.name),
+                      new SqlParameter("@description", permission.description),
+                      new SqlParameter("@Id", permission.id) // El ID es necesario para la condición WHERE
                 };
 
                 // Ejecutar la consulta SQL
                 var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
 
-                // Verificar si la actualización afectó alguna fila (es decir, si el usuario fue actualizado)
+                // Verificar si la actualización afectó alguna fila (es decir, si el Permission fue actualizado)
                 return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el usuario: {ex.Message}");
+                _logger.LogError($"Error al actualizar el Permission: {ex.Message}");
                 return false;
             }
         }
@@ -216,25 +202,18 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<bool> DeleteAsyncSQL(int id)
+        public async Task<bool> DeletePermissionAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL para eliminar el usuario con el Id proporcionado
-                var sql = "DELETE FROM Permission WHERE Id = @Id";  // Asegúrate de que 'Id' es la columna correcta para identificar al usuario
-
-                // Parámetro SQL que se pasa a la consulta
-                var parametro = new SqlParameter("@Id", id);  // El Id es el único parámetro en este caso
-
-                // Ejecutar la consulta SQL para eliminar el usuario
+                var sql = "DELETE FROM permission WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
                 var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
-
-                // Verificar si se eliminó alguna fila (es decir, si el usuario fue encontrado y eliminado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la eliminación fue exitosa
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar el usuario: {ex.Message}");
+                _logger.LogError($"Error al eliminar el Permission: {ex.Message}");
                 return false;
             }
         }

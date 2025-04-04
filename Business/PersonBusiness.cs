@@ -21,11 +21,12 @@ namespace Business
         }
 
         // Atributo para obtener todos los Person como DTOs
+
         public async Task<IEnumerable<PersonDto>> GetAllPersonAsync()
         {
             try
             {
-                var Persons = await _PersonData.GetAllAsync();
+                var Persons = await _PersonData.GetAllPersonAsyncSQL();
                 var PersonDTO = MapToDTOList(Persons);
 
                 return PersonDTO;
@@ -38,7 +39,7 @@ namespace Business
         }
 
         // Atributo para obtener un Person por ID como DTO
-        public async Task<PersonDto> GetByIdAsync(int id)
+        public async Task<PersonDto> GetByPersonIdAsync(int id)
         {
             if (id <= 0)
             {
@@ -48,7 +49,7 @@ namespace Business
 
             try
             {
-                var person = await _PersonData.GetByIdAsync(id);
+                var person = await _PersonData.GetByIdAsyncSQL(id);
                 if (person == null)
                 {
                     _logger.LogInformation("No se encontró ningún Persona con ID: {PersonId}", id);
@@ -73,7 +74,8 @@ namespace Business
 
                 var Person = MapToEntity(PersonDto);
 
-                var PersonCreado = await _PersonData.CreateAsync(Person);
+                var PersonCreado = await _PersonData.CreatePersonAsyncSQL(Person);
+                _logger.LogInformation("Persona insertado con ID: {PersonId}", PersonCreado.id);
 
                 return MapToDTO(PersonCreado);
             }
@@ -84,17 +86,23 @@ namespace Business
             }
         }
 
-        public async Task<PersonDto> UpdatePersonAsync(PersonDto personDto)
+        public async Task<PersonDto> UpdatePersonAsync(int id, PersonDto personDto)
         {
             try
             {
                 ValidatePerson(personDto);
-                var existingPerson = await _PersonData.GetByIdAsync(personDto.Id);
+                var existingPerson = await _PersonData.GetByIdAsyncLinq(id);
                 if (existingPerson == null)
                 {
                     throw new EntityNotFoundException("Person", "No se encontró la relación Person");
                 }
-                var success = await _PersonData.UpdateAsync(existingPerson);
+
+                // Convertir la fecha a UTC antes de actualizar
+                existingPerson.name = personDto.Name;
+                existingPerson.lastname = personDto.LastName;
+                existingPerson.phone = personDto.Phone;
+
+                var success = await _PersonData.UpdatePersonAsyncLinq(existingPerson);
 
                 if (!success)
                 {
@@ -115,7 +123,7 @@ namespace Business
         {
             try
             {
-                return await _PersonData.DeleteAsync(id);
+                return await _PersonData.DeletePermissionAsyncSQL(id);
             }
             catch (Exception ex)
             {
@@ -144,9 +152,10 @@ namespace Business
         {
             return new PersonDto
             {
-                Id = Person.Id,
-                Name = Person.Name,
-                LastName = Person.LastName
+                Id = Person.id,
+                Name = Person.name,
+                LastName = Person.lastname,
+                Phone = Person.phone
             };
         }
 
@@ -155,9 +164,10 @@ namespace Business
         {
             return new Person
             {
-                Id = PersonDto.Id,
-                Name = PersonDto.Name,
-                LastName = PersonDto.LastName,
+                id = PersonDto.Id,
+                name = PersonDto.Name,
+                lastname = PersonDto.LastName,
+                phone = PersonDto.Phone
             };
         }
 

@@ -20,6 +20,8 @@ namespace Business
             _logger = logger;
         }
 
+        //DTOS
+
         //Atributo para obtener todos los User con DTOs
         public async Task<IEnumerable<UserDto>> GetAllUserAsync()
         {
@@ -86,25 +88,25 @@ namespace Business
         }
 
 
-        public async Task<UserDto> UpdateUserAsync(int id, UserDto userDto)
+        public async Task<UserDto> UpdateUserAsync(UserDto userDto)
         {
             try
             {
                 valiteUser(userDto);
 
-                var existingUser = await _userData.GetByIdAsync(id);
+                var existingUser = await _userData.GetByIdAsyncSQL(userDto.id);
                 if (existingUser == null)
                 {
-                    throw new EntityNotFoundException("User", $"No se encontró el usuario con ID {id}");
+                    throw new EntityNotFoundException("User", $"No se encontró el usuario con ID ");
                 }
 
                 // Convertir la fecha a UTC antes de actualizar
                 existingUser.user_per = userDto.UserName;
                 existingUser.password = userDto.Password;
                 existingUser.gmail = userDto.Gmail;
-                existingUser.registrationdate = userDto.Registrationdate.ToUniversalTime();
+                existingUser.registrationdate = userDto.Registrationdate;
 
-                var success = await _userData.UpdateAsync(existingUser);
+                var success = await _userData.UpdateAsyncSQL(existingUser);
 
                 if (!success)
                 {
@@ -115,7 +117,7 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error al actualizar el usuario con ID {id}");
+                _logger.LogError(ex, $"Error al actualizar el usuario con ID ");
                 throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario", ex);
             }
         }
@@ -156,20 +158,20 @@ namespace Business
             {
                 id = User.id,  
                 UserName = User.user_per,
-                Password = User.password,  // 🔴 Asegurar que se asigna bien
+                Password = User.password, 
                 Gmail = User.gmail,
                 Registrationdate = User.registrationdate
             };
         }
 
         // Atributo para mapear de UserDTO a User
-        private User MapToEntity(UserDto UserDto)
+        private User    MapToEntity(UserDto UserDto)
         {
             return new User
             {
                 id = UserDto.id, 
                 user_per = UserDto.UserName,
-                password = UserDto.Password,  // 🔴 Asegurar que se asigna bien
+                password = UserDto.Password, 
                 gmail = UserDto.Gmail,
                 registrationdate = UserDto.Registrationdate
             };

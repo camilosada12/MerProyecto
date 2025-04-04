@@ -12,21 +12,6 @@ C:\Users\SENA\source\repos\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
 C:\Users\SENA\source\repos\Security\Entity\obj\Debug\net8.0\Entity.pdb
 C:\Users\SENA\source\repos\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
 C:\Users\SENA\source\repos\Security\Entity\obj\Debug\net8.0\ref\Entity.dll
-F:\Security\Entity\obj\Debug\net8.0\Entity.csproj.AssemblyReference.cache
-F:\Security\Entity\obj\Debug\net8.0\Entity.GeneratedMSBuildEditorConfig.editorconfig
-F:\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfoInputs.cache
-F:\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfo.cs
-F:\Security\Entity\obj\Debug\net8.0\Entity.csproj.CoreCompileInputs.cache
-F:\Security\Entity\obj\Debug\net8.0\Entity.dll
-F:\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
-F:\Security\Entity\obj\Debug\net8.0\Entity.pdb
-F:\Security\Entity\bin\Debug\net8.0\Entity.deps.json
-F:\Security\Entity\bin\Debug\net8.0\Entity.runtimeconfig.json
-F:\Security\Entity\bin\Debug\net8.0\Entity.dll
-F:\Security\Entity\bin\Debug\net8.0\Entity.pdb
-F:\Security\Entity\obj\Debug\net8.0\Entity.sourcelink.json
-F:\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
-F:\Security\Entity\obj\Debug\net8.0\ref\Entity.dll
 D:\Security\Entity\bin\Debug\net8.0\Entity.deps.json
 D:\Security\Entity\bin\Debug\net8.0\Entity.runtimeconfig.json
 D:\Security\Entity\bin\Debug\net8.0\Entity.dll
@@ -57,3 +42,48 @@ E:\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
 E:\Security\Entity\obj\Debug\net8.0\Entity.pdb
 E:\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
 E:\Security\Entity\obj\Debug\net8.0\ref\Entity.dll
+F:\Security\Entity\bin\Debug\net8.0\Entity.deps.json
+F:\Security\Entity\bin\Debug\net8.0\Entity.runtimeconfig.json
+F:\Security\Entity\bin\Debug\net8.0\Entity.dll
+F:\Security\Entity\bin\Debug\net8.0\Entity.pdb
+F:\Security\Entity\obj\Debug\net8.0\Entity.csproj.AssemblyReference.cache
+F:\Security\Entity\obj\Debug\net8.0\Entity.GeneratedMSBuildEditorConfig.editorconfig
+F:\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfoInputs.cache
+F:\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfo.cs
+F:\Security\Entity\obj\Debug\net8.0\Entity.csproj.CoreCompileInputs.cache
+F:\Security\Entity\obj\Debug\net8.0\Entity.sourcelink.json
+F:\Security\Entity\obj\Debug\net8.0\Entity.dll
+F:\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
+F:\Security\Entity\obj\Debug\net8.0\Entity.pdb
+F:\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
+F:\Security\Entity\obj\Debug\net8.0\ref\Entity.dll
+C:\Users\Juan Manuel\Desktop\Security\Entity\bin\Debug\net8.0\Entity.deps.json
+C:\Users\Juan Manuel\Desktop\Security\Entity\bin\Debug\net8.0\Entity.runtimeconfig.json
+C:\Users\Juan Manuel\Desktop\Security\Entity\bin\Debug\net8.0\Entity.dll
+C:\Users\Juan Manuel\Desktop\Security\Entity\bin\Debug\net8.0\Entity.pdb
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.csproj.AssemblyReference.cache
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfoInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfo.cs
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.csproj.CoreCompileInputs.cache
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.sourcelink.json
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.dll
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.pdb
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
+C:\Users\Juan Manuel\Desktop\Security\Entity\obj\Debug\net8.0\ref\Entity.dll
+C:\Users\SENA\Desktop\Security\Entity\bin\Debug\net8.0\Entity.deps.json
+C:\Users\SENA\Desktop\Security\Entity\bin\Debug\net8.0\Entity.runtimeconfig.json
+C:\Users\SENA\Desktop\Security\Entity\bin\Debug\net8.0\Entity.dll
+C:\Users\SENA\Desktop\Security\Entity\bin\Debug\net8.0\Entity.pdb
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.csproj.AssemblyReference.cache
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfoInputs.cache
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.AssemblyInfo.cs
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.csproj.CoreCompileInputs.cache
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.sourcelink.json
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.dll
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\refint\Entity.dll
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.pdb
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\Entity.genruntimeconfig.cache
+C:\Users\SENA\Desktop\Security\Entity\obj\Debug\net8.0\ref\Entity.dll

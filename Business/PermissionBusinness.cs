@@ -1,7 +1,9 @@
 ﻿using Data;
 using Entity.DTOs;
 using Entity.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using Utilities.Exceptions;
 
 namespace Business
@@ -25,7 +27,7 @@ namespace Business
         {
             try
             {
-                var permission = await _PermissionData.GetAllAsync();
+                var permission = await _PermissionData.GetAllAsyncSQL();
                 var permissionDTO = MapToDTOList(permission);
 
                 return permissionDTO;
@@ -38,7 +40,7 @@ namespace Business
         }
 
         //Atributo para obtener un Permiso por Id como DTO
-        public async Task<PermissionDto> GetByIdAsync(int id)
+        public async Task<PermissionDto> GetPermissionByIdAsync(int id)
         {
             if(id <= 0)
             {
@@ -48,7 +50,7 @@ namespace Business
 
             try
             {
-                var Permission = await _PermissionData.GetByIdAsync(id);
+                var Permission = await _PermissionData.GetPermissionByIdAsync(id);
                 if(Permission == null)
                 {
                     _logger.LogInformation("No se encontro ningun permiso con Id : {PermissionId}", id);
@@ -73,6 +75,7 @@ namespace Business
                 var permission = MapToEntity(PermissionDto);
 
                 var PermissionCreado = await _PermissionData.CreateAsync(permission);
+                _logger.LogInformation("Permission insertado con ID: {UserId}", PermissionCreado.id);
 
                 return MapToDTO(PermissionCreado);
             }
@@ -83,16 +86,21 @@ namespace Business
             }
         }
 
-        public async Task<PermissionDto> UpdatePermissionAsync(PermissionDto permissionDto)
+        public async Task<PermissionDto> UpdatePermissionAsync(int id , PermissionDto permissionDto)
         {
             try
             {
                 validatePermission(permissionDto);
-                var existingPermission = await _PermissionData.GetByIdAsync(permissionDto.Id);
+
+                var existingPermission = await _PermissionData.GetPermissionByIdAsync(id);
+
                 if (existingPermission == null)
                 {
                     throw new EntityNotFoundException("PermissionDto", "No se encontró la relación PermissionDto");
                 }
+
+                existingPermission.name = permissionDto.Name;
+                existingPermission.description = permissionDto.Description;
 
                 var success = await _PermissionData.UpdateAsync(existingPermission);
 
@@ -110,16 +118,16 @@ namespace Business
             }
         }
 
-        // Método para eliminar una relación Permission de manera permanente
-        public async Task<bool> DeletePermissionPermanentAsync(int id)
+        // Método para eliminar una relación Rol de manera lógica
+        public async Task<bool> DeletePermissionAsync(int id)
         {
             try
             {
-                return await _PermissionData.DeleteAsync(id);
+                return await _PermissionData.DeletePermissionAsyncSQL(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar permanentemente la relación Permission");
+                _logger.LogError(ex, "Error al eliminar lógicamente la relación Permission");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Permission", ex);
             }
         }
@@ -143,9 +151,9 @@ namespace Business
         {
             return new PermissionDto
             {
-                Id = Permission.Id,
-                Name = Permission.Name,
-                Description = Permission.Description
+                Id = Permission.id,
+                Name = Permission.name,
+                Description = Permission.description
             };
         }
 
@@ -154,9 +162,9 @@ namespace Business
         {
             return new Permission
             {
-                Id = PermissionDto.Id,
-                Name = PermissionDto.Name,
-                Description = PermissionDto.Description
+                id = PermissionDto.Id,
+                name = PermissionDto.Name,
+                description = PermissionDto.Description
             };
         }
 

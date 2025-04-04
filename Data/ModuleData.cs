@@ -3,6 +3,8 @@ using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data
 {
@@ -35,10 +37,10 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<IEnumerable<Module>> GetAllAsyncSQL()
+        public async Task<IEnumerable<Module>> GetAllModuleAsyncSQL()
         {
-            string query = "SELECT * FROM Module";
-            return (IEnumerable<Module>)await _context.QueryAsync<IEnumerable<Module>>(query);
+            string query = "SELECT * FROM module";
+            return await _context.Set<Module>().FromSqlRaw(query).ToListAsync();
         }
 
         //Atributo Linq
@@ -56,29 +58,19 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Module?> GetByIdAsyncSQL(Module id)
+        public async Task<Module?> GetByModuleIdAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL con parámetro para el Id
-                var query = "SELECT * FROM Module WHERE Id = @id";
+                var query = "SELECT * FROM module WHERE id = @Id";  // "id" en minúsculas
+                var parametro = new NpgsqlParameter("@Id", id);
 
-                var parametros = new SqlParameter[]
-                {
-                    new SqlParameter("@id", id.Id),
-                };
-
-                // Ejecutar la consulta y obtener el Id del nuevo Module
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parametros);
-
-                // Obtener el Module recién insertado con el Id generado
-                id.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
-                return id;
+                return await _context.Set<Module>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Module con el Id {Id}", id);
-                throw; // Re-lanza la excepción para ser manejada en las capas superiores
+                _logger.LogError(ex, "Error al obtener el usuario con el Id {id}", id);
+                throw;
             }
         }
 
@@ -105,28 +97,24 @@ namespace Data
         }
 
         //Atributo SQL
-        public async Task<Module> CreateAsyncSQL(Module module)
+        public async Task<Module> CreateModuleAsyncSQL(Module module)
         {
             try
             {
                 // SQL para insertar en la tabla Users
-                var sql = "INSERT INTO Users (Name, description, statu) " +
-                          "VALUES (@Name, @Description, @Statu);" +
-                          "SELECT SCOPE_IDENTITY();"; 
+                const string sql = @"INSERT INTO public.""module""(
+	                    ""name"", ""description"", ""statu"")
+	                    VALUES (@Name,@Description,@Statu)
+                        RETURNING id;"
+                ;
 
-                // Ejecutar el comando SQL
-                var parametros = new SqlParameter[]
+                module.id = await _context.QueryFirstOrDefaultAsync<int>(sql, new
                 {
-                    new SqlParameter("@Name", module.Name),
-                    new SqlParameter("@Description", module.description),
-                    new SqlParameter("@Statu", module.statu),
-                };
+                    Name = module.name,
+                    Description = module.description,
+                    Statu = module.statu,
+                });
 
-                // Ejecutar la consulta y obtener el Id del nuevo Module
-                var result = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
-
-                // Obtener el Module recién insertado con el Id generado
-                module.Id = Convert.ToInt32(result); // Asumimos que SCOPE_IDENTITY devuelve un int
                 return module;
             }
             catch (Exception ex)
@@ -144,7 +132,7 @@ namespace Data
         /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
 
         //Atributo Linq
-        public async Task<bool> UpdateAsync(Module module)
+        public async Task<bool> UpdateModuleAsyncLinq(Module module)
         {
             try
             {
@@ -174,10 +162,10 @@ namespace Data
                 // Parámetros SQL que se pasan a la consulta
                 var parametros = new SqlParameter[]
                 {
-                  new SqlParameter("@Name", module.Name),
+                  new SqlParameter("@Name", module.name),
                   new SqlParameter("@description", module.description),
                   new SqlParameter("@Statu", module.statu),
-                  new SqlParameter("@Id", module.Id) // El ID es necesario para la condición WHERE
+                  new SqlParameter("@Id", module.id) // El ID es necesario para la condición WHERE
                 };
 
                 // Ejecutar la consulta SQL
@@ -221,25 +209,18 @@ namespace Data
 
         //Atributo SQL
 
-        public async Task<bool> DeleteAsyncSQL(int id)
+        public async Task<bool> DeleteModuleAsyncSQL(int id)
         {
             try
             {
-                // Consulta SQL para eliminar el Module con el Id proporcionado
-                var sql = "DELETE FROM Module WHERE Id = @Id";  // Asegúrate de que 'Id' es la columna correcta para identificar al usuario
-
-                // Parámetro SQL que se pasa a la consulta
-                var parametro = new SqlParameter("@Id", id);  // El Id es el único parámetro en este caso
-
-                // Ejecutar la consulta SQL para eliminar el Module
+                var sql = "DELETE FROM module WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
                 var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
-
-                // Verificar si se eliminó alguna fila (es decir, si el v fue encontrado y eliminado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la eliminación fue exitosa
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar el Module: {ex.Message}");
+                _logger.LogError($"Error al eliminar el Modulo: {ex.Message}");
                 return false;
             }
         }

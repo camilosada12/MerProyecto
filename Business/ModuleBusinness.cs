@@ -20,48 +20,49 @@ namespace Business
             _logger = logger;
         }
 
-        //Atributo para obtener todos los Module como DTOs
+        //Atributo para obtener todos los User con DTOs
         public async Task<IEnumerable<ModuleDto>> GetAllModuleAsync()
         {
             try
             {
-                var Module = await _ModuleData.GetAllAsync();
+                var Module = await _ModuleData.GetAllModuleAsyncSQL();
                 var ModuleDTO = MapToDTOList(Module);
                 return ModuleDTO;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todos los Module");
-                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de Module", ex);
+                throw new ExternalServiceException("base de datos", "Error al recuperar la lista de Module", ex);
             }
         }
 
-        // Atributo para obtener un Module por ID como DTO
-        public async Task<ModuleDto> GetModuleByIdAsync(int id)
+        //Atributo para obtener un Module por Id como DTO
+        public async Task<ModuleDto> GetModulesByIdAsync(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
-                _logger.LogWarning("Se intentó obtener un Module con ID inválido: {ModuleId}", id);
-                throw new Utilities.Exceptions.ValidationException("id", "El ID del Modulo debe ser mayor que cero");
+                _logger.LogWarning("se intento obtener un Module con Id invalido: {Id}", id);
+                throw new Utilities.Exceptions.ValidationException("id", "el Id del Module debe ser meyor a cero");
             }
+
             try
             {
-                var Module = await _ModuleData.GetByIdAsync(id);
-                if(Module == null)
+                var Module = await _ModuleData.GetByModuleIdAsyncSQL(id);
+                if (Module == null)
                 {
-                    _logger.LogInformation("No se encontro ningun Module con Id : {ModuleId}", id);
+                    _logger.LogInformation("No se encontro ningun Module con Id: {ModuleId}", id);
                     throw new EntityNotFoundException("Module", id);
-
                 }
 
                 return MapToDTO(Module);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Module con Id: {Moduleid}", id);
+                _logger.LogError(ex, "Error al obtener el Module con ID: {ModuleId}", id);
                 throw new ExternalServiceException("base de datos", $"Error al recuperar el Module con Id {id}", ex);
             }
         }
+
 
         //Atributo para crear un Module desde un DTO
         public async Task<ModuleDto> CreateModuleAsync(ModuleDto ModuleDto)
@@ -72,7 +73,8 @@ namespace Business
 
                 var Module = MapToEntity(ModuleDto);
 
-                var ModuleCreado = await _ModuleData.CreateAsync(Module);
+                var ModuleCreado = await _ModuleData.CreateModuleAsyncSQL(Module);
+                _logger.LogInformation("Module insertado con ID: {UserId}", ModuleCreado.id);
 
                 return MapToDTO(ModuleCreado);
             }
@@ -83,18 +85,23 @@ namespace Business
             }
         }
 
-        public async Task<ModuleDto> UpdateModuleAsync(ModuleDto moduleDto)
+        public async Task<ModuleDto> UpdateModuleAsync(int id, ModuleDto moduleDto)
         {
             try
             {
                 ValidateModule(moduleDto);
-                var existingModule = await _ModuleData.GetByIdAsync(moduleDto.Id);
+                var existingModule = await _ModuleData.GetByIdAsync(id);
                 if (existingModule == null)
                 {
                     throw new EntityNotFoundException("Module", "No se encontró la relación Module");
                 }
 
-                var success = await _ModuleData.UpdateAsync(existingModule);
+                // Convertir la fecha a UTC antes de actualizar
+                existingModule.name = moduleDto.Name;
+                existingModule.description = moduleDto.description;
+                existingModule.statu = moduleDto.statu;
+
+                var success = await _ModuleData.UpdateModuleAsyncLinq(existingModule);
 
                 if (!success)
                 {
@@ -107,6 +114,20 @@ namespace Business
             {
                 _logger.LogError(ex, "Error al actualizar la relación Module");
                 throw new ExternalServiceException("Base de datos", "Error al actualizar la relación Module", ex);
+            }
+        }
+
+        // Método para eliminar una relación Rol de manera lógica
+        public async Task<bool> DeleteModuleAsync(int id)
+        {
+            try
+            {
+                return await _ModuleData.DeleteModuleAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente la relación Module");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Module", ex);
             }
         }
 
@@ -130,8 +151,8 @@ namespace Business
         {
             return new ModuleDto
             {
-                Id = Module.Id,
-                Name = Module.Name,
+                Id = Module.id,
+                Name = Module.name,
                 description = Module.description,
                 statu = Module.statu
             };
@@ -142,8 +163,8 @@ namespace Business
         {
             return new Module
             {
-                Id = ModuleDto.Id,
-                Name = ModuleDto.Name,
+                id = ModuleDto.Id,
+                name = ModuleDto.Name,
                 description = ModuleDto.description,
                 statu = ModuleDto.statu
             };
