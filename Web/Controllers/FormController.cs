@@ -108,44 +108,42 @@ namespace Web.Controllers
             try
             {
                 var createform = await _FormBusiness.CreateFormAsync(formDto);
-                _logger.LogInformation("Usuario creado con ID: {formId}", createform.Id);
+                _logger.LogInformation("Form creado con ID: {formId}", createform.Id);
                 return CreatedAtAction(nameof(GetFormById), new { id = createform.Id }, createform);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear usuario");
+                _logger.LogError(ex, "Error al crear Form");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(FormDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] FormDto formDto)
+        public async Task<IActionResult> UpdateFormAsync([FromBody] FormDto formDto)
         {
             try
             {
-                // Convertir la fecha a UTC antes de enviarla a la lógica de negocio
-                formDto.DateCreation = formDto.DateCreation.ToUniversalTime();
 
-                var updatedForm = await _FormBusiness.UpdateFormAsync(id, formDto);
+                var updatedForm = await _FormBusiness.UpdateFormAsync(formDto);
                 return Ok(updatedForm);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {FormId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar Form con ID: {FormId}");
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Usuario no encontrado con ID: {FormId}", id);
+                _logger.LogInformation(ex, "Form no encontrado con ID: {FormId}");
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar usuario con ID: {FormId}", id);
+                _logger.LogError(ex, "Error al actualizar Form con ID: {FormId}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -155,33 +153,69 @@ namespace Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        public async Task<IActionResult> DeleteFormAsync(int id)
         {
             try
             {
                 var result = await _FormBusiness.DeleteFormAsync(id);
                 if (!result)
                 {
-                    return NotFound(new { message = "Usuario no encontrado" });
+                    return NotFound(new { message = "Form no encontrado" });
                 }
-                return NoContent();
+
+                return Ok(new { message = "form eliminado exitosamente" });
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al eliminar usuario con ID: {FormId}", id);
+                _logger.LogWarning(ex, "Validación fallida al eliminar Form con ID: {FormId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Usuario no encontrado con ID: {FormId}", id);
+                _logger.LogInformation(ex, "Form no encontrado con ID: {FormId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar usuario con ID: {FormId}", id);
+                _logger.LogError(ex, "Error al eliminar Form con ID: {FormId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpDelete("logico/{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicoFormAsync(int id)
+        {
+            try
+            {
+                var result = await _FormBusiness.DeleteLogicoFormAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Form no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "Form eliminado lógicamente exitosamente" });
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar Form con ID: {FormId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Form no encontrado con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar Form con ID: {FormId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }

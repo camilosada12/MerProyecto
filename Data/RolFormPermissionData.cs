@@ -30,11 +30,96 @@ namespace Data
 
         //Atributo Linq
 
-        public async Task<IEnumerable<RolFormPermission>> GetAllRolFormPermissionAsync()
+        public async Task<IEnumerable<RolFormPermission>> GetAllRolFormPermissionAsyncLinq()
         {
             return await _context.Set<RolFormPermission>().ToListAsync();
         }
 
+        //Metodo Linq
+        public async Task<RolFormPermission?> GetByRolFormPermissionIdAsyncLinq(int id)
+        {
+            try
+            {
+                return await _context.Set<RolFormPermission>().FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener ModuleForm con Id {ModuleFormId}", id);
+                throw; // Re-lanza la excepcion para que sea manejada en capas superiores
+            }
+        }
+
+        ///<summary>
+        ///crea un nuevo RolFormPermission en la base de datos
+        ///</summary>
+        ///<param name="RolFormPermission">instancia del RolFormPermission a crear </param>
+        ///<returns> El ModuleForm creado.</returns>
+
+        //Atributo Linq
+        public async Task<RolFormPermission> CreateAsyncLinq(RolFormPermission rolFormPermission)
+        {
+            try
+            {
+                await _context.Set<RolFormPermission>().AddAsync(rolFormPermission);
+                await _context.SaveChangesAsync();
+                return rolFormPermission;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear el rol: {ex.Message}");
+                throw;
+            }
+        }
+
+        ///<summary>
+        ///Actualiza un nuevo RolFormPermissionDataId en la base de datos.
+        /// </summary>
+        /// <param name="RolFormPermission">objeto con la informacion actualizada</param>
+        /// <returns>True si la operacion es exitosa, false en caso contrario</returns>
+
+        //Metodo linq
+        public async Task<bool> UpdateRolFormPermissionAsyncLinq(RolFormPermission RolFormPermission)
+        {
+            try
+            {
+                _context.Set<RolFormPermission>().Update(RolFormPermission);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el RolFormPermission: {ex.Message}");
+                return false;
+            }
+        }
+
+        ///<summary>
+        ///elimina un nuevo RolFormPermissionDataId en la base de datos.
+        /// </summary>
+        /// <param name="id">Identificador unico del RolFormPermissionDataId a eliminar</param>
+        /// <returns>True si la eliminacion fue exitosa, false en caso contrario</returns>
+
+        //Metodo Linq
+        public async Task<bool> DeleteAsyncLinq(int id)
+        {
+            try
+            {
+                var RolformPermisison = await _context.Set<RolFormPermission>().FindAsync(id);
+                if (RolformPermisison == null)
+                    return false;
+
+                _context.Set<RolFormPermission>().Remove(RolformPermisison);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar el ModuleForm: {ex.Message}");
+                return false;
+            }
+        }
+
+        //SQL
 
         //Atributo SQL
         public async Task<IEnumerable<RolFormPermission>> GetAllAsyncSql()
@@ -63,22 +148,7 @@ namespace Data
             }
         }
 
-        //Metodo Linq
-        public async Task<RolFormPermission?> GetByRolFormPermissionIdAsync(int id)
-        {
-            try
-            {
-                return await _context.Set<RolFormPermission>().FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener ModuleForm con Id {ModuleFormId}", id);
-                throw; // Re-lanza la excepcion para que sea manejada en capas superiores
-            }
-        }
-
         //Metodo SQL
-
         public async Task<RolFormPermission?> GetByIdAsyncSql(int id)
         {
             try
@@ -107,13 +177,7 @@ namespace Data
             }
         }
 
-
-        ///<summary>
-        ///crea un nuevo RolFormPermission en la base de datos
-        ///</summary>
-        ///<param name="RolFormPermission">instancia del RolFormPermission a crear </param>
-        ///<returns> El ModuleForm creado.</returns>
-
+        //Metodo SQL
         public async Task<RolFormPermission> CreateRolFormPermissionAsyncSql(RolFormPermission rolFormPermission)
         {
             try
@@ -141,62 +205,7 @@ namespace Data
             }
         }
 
-
-        //Metodo sql
-        public async Task<int> CreateAsyncSQL(RolFormPermission rolFormPermission)
-        {
-            try
-            {
-                string query = @"
-            INSERT INTO RolFormPermission (FormId, PermissionId, RolId) 
-            VALUES (@FormId, @PermissionId, @RolId);
-            SELECT SCOPE_IDENTITY(;
-        ";
-
-                var parameters = new[]
-                {
-            new SqlParameter("@FormId", rolFormPermission.formid),
-            new SqlParameter("@PermissionId", rolFormPermission.permissionid),
-            new SqlParameter("@RolId", rolFormPermission.rolid)
-        };
-
-                var result = await _context.Database.ExecuteSqlRawAsync(query, parameters);
-
-                return result; // Retorna el ID generado
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al crear el RolFormPermission: {ex.Message}");
-                throw;
-            }
-        }
-
-
-
-
-        ///<summary>
-        ///Actualiza un nuevo RolFormPermissionDataId en la base de datos.
-        /// </summary>
-        /// <param name="RolFormPermission">objeto con la informacion actualizada</param>
-        /// <returns>True si la operacion es exitosa, false en caso contrario</returns>
-
-        //Metodo linq
-        public async Task<bool> UpdateRolFormPermissionAsync(RolFormPermission RolFormPermission)
-        {
-            try
-            {
-                _context.Set<RolFormPermission>().Update(RolFormPermission);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al actualizar el RolFormPermission: {ex.Message}");
-                return false;
-            }
-        }
-
-        //Metodo sql
+        //Metodo SQL
         public async Task<bool> UpdateAsyncSQL(RolFormPermission rolFormPermission)
         {
             try
@@ -230,32 +239,6 @@ namespace Data
         }
 
 
-        ///<summary>
-        ///elimina un nuevo RolFormPermissionDataId en la base de datos.
-        /// </summary>
-        /// <param name="id">Identificador unico del RolFormPermissionDataId a eliminar</param>
-        /// <returns>True si la eliminacion fue exitosa, false en caso contrario</returns>
-
-        //Metodo Linq
-        public async Task<bool> DeleteAsync(int id)
-        {
-            try
-            {
-                var RolformPermisison = await _context.Set<RolFormPermission>().FindAsync(id);
-                if (RolformPermisison == null)
-                    return false;
-
-                _context.Set<RolFormPermission>().Remove(RolformPermisison);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al eliminar el ModuleForm: {ex.Message}");
-                return false;
-            }
-        }
-
         //Metodo sql
 
         public async Task<bool> DeleteAsyncSQL(int id)
@@ -276,6 +259,8 @@ namespace Data
                 return false;
             }
         }
+
+
 
     }
 }

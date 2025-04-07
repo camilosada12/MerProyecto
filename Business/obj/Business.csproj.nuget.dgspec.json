@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj": {}
+    "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj": {}
   },
   "projects": {
-    "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj": {
+    "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj",
+        "projectUniqueName": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj",
         "projectName": "Business",
-        "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj",
-        "packagesPath": "C:\\Users\\SENA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SENA\\Desktop\\Security\\Business\\obj\\",
+        "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj",
+        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\SENA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,14 +33,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\SENA\\Desktop\\Security\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Data\\Data.csproj"
+              "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\Data.csproj"
               },
-              "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj": {
-                "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj"
+              "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj": {
+                "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj"
               },
-              "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj": {
-                "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj"
+              "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj": {
+                "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -54,7 +54,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -75,24 +76,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\SENA\\Desktop\\Security\\Data\\Data.csproj": {
+    "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SENA\\Desktop\\Security\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Data\\Data.csproj",
-        "packagesPath": "C:\\Users\\SENA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SENA\\Desktop\\Security\\Data\\obj\\",
+        "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\Data.csproj",
+        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\SENA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -108,11 +109,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj": {
-                "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj"
+              "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj": {
+                "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj"
               },
-              "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj": {
-                "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj"
+              "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj": {
+                "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -126,7 +127,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -153,24 +155,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj": {
+    "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj",
+        "projectUniqueName": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj",
         "projectName": "Entity",
-        "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Entity\\Entity.csproj",
-        "packagesPath": "C:\\Users\\SENA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SENA\\Desktop\\Security\\Entity\\obj\\",
+        "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\Entity.csproj",
+        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Entity\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\SENA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -197,7 +199,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -244,24 +247,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj": {
+    "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj",
+        "projectUniqueName": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj",
         "projectName": "Utilities",
-        "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\Utilities.csproj",
-        "packagesPath": "C:\\Users\\SENA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SENA\\Desktop\\Security\\Utilities\\obj\\",
+        "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\Utilities.csproj",
+        "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Utilities\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\SENA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -288,7 +291,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -309,7 +313,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

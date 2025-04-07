@@ -22,7 +22,7 @@ namespace Business
         {
             try
             {
-                var rolFormPermissions = await _RolFormPermissionData.GetAllRolFormPermissionAsync();
+                var rolFormPermissions = await _RolFormPermissionData.GetAllRolFormPermissionAsyncLinq();
                 var rolFormPermissionsDto = MapToDTOList(rolFormPermissions);
 
                 return rolFormPermissionsDto;
@@ -45,7 +45,7 @@ namespace Business
 
             try
             {
-                var rolFormPermissionsDto = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(id);
+                var rolFormPermissionsDto = await _RolFormPermissionData.GetByRolFormPermissionIdAsyncLinq(id);
                 if (rolFormPermissionsDto == null)
                 {
                     _logger.LogInformation("No se encontró ningún RolFormPermission con ID: {RolFormPermissionId}", id);
@@ -88,7 +88,7 @@ namespace Business
             try
             {
                 ValidateRolFormPermission(RolFormPermissionDTO);
-                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(RolFormPermissionDTO.Id);
+                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsyncLinq(RolFormPermissionDTO.Id);
                 if (existingRolFormPermission == null)
                 {
                     throw new EntityNotFoundException("RolFormPermissionDto", "No se encontró la relación RolFormPermissionDto");
@@ -98,7 +98,7 @@ namespace Business
                 existingRolFormPermission.formid = RolFormPermissionDTO.FormId;
                 existingRolFormPermission.permissionid = RolFormPermissionDTO.PermissionId;
 
-                var success = await _RolFormPermissionData.UpdateRolFormPermissionAsync(existingRolFormPermission);
+                var success = await _RolFormPermissionData.UpdateRolFormPermissionAsyncLinq(existingRolFormPermission);
 
                 if (!success)
                 {
@@ -119,13 +119,13 @@ namespace Business
         {
             try
             {
-                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsync(id);
+                var existingRolFormPermission = await _RolFormPermissionData.GetByRolFormPermissionIdAsyncLinq(id);
                 if (existingRolFormPermission == null)
                 {
                     throw new EntityNotFoundException("RolFormPermission ", id);
                 }
 
-                return await _RolFormPermissionData.DeleteAsync(id);
+                return await _RolFormPermissionData.DeleteAsyncLinq(id);
             }
             catch (Exception ex)
             {

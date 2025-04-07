@@ -655,12 +655,18 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.3"
         },
         "runtime": {
-          "Entity.dll": {}
+          "Entity.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Utilities/1.0.0": {
         "runtime": {
-          "Utilities.dll": {}
+          "Utilities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

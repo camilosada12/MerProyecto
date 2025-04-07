@@ -95,7 +95,7 @@ namespace Data
 
         public async Task<IEnumerable<User>> GetAllAsyncSQL()
         {
-            string query = "SELECT * FROM usermulta";
+            const string query = @"SELECT * FROM usermulta WHERE isdelete = false";
             return await _context.QueryAsync<User>(query);
         }
 
@@ -103,7 +103,7 @@ namespace Data
         {
             try
             {
-                var query = "SELECT * FROM usermulta WHERE id = @Id";  // "id" en minúsculas
+                string query = @"SELECT * FROM public.usermulta WHERE id = @Id AND isdelete = false";
 
                 return await _context.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
             }
@@ -119,16 +119,16 @@ namespace Data
             try
             {
                 const string query = @"
-                    INSERT INTO public.""usermulta""(""user_per"", ""password"", ""gmail"", ""registrationdate"")
-                    VALUES (@UserPer, @Password, @Gmail, @RegistrationDate)
-                    RETURNING id;";
+                    INSERT INTO public.usermulta(user_per, password, gmail, isdelete)
+                    VALUES (@UserPer, @Password, @Gmail, @IsDelete)
+                    RETURNING id;;";
 
                 user.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
                     UserPer = user.user_per,
                     Password = user.password,  
                     Gmail = user.gmail,
-                    RegistrationDate = user.registrationdate
+                    IsDelete = user.isdelete
                 });
 
                 return user;
@@ -146,21 +146,18 @@ namespace Data
             {
                 // Consulta SQL de actualización
                 var sql = @"
-            UPDATE public.usermulta
-            SET 
-                user_per = @user_Per,
-                password = @password,
-                gmail = @gmail,
-                registrationdate = @registrationDate
-            WHERE id = @id;";
+                        UPDATE public.usermulta SET 
+                        user_per = @User_Per,
+                        password = @Password,
+                        gmail = @Gmail
+                        WHERE id = @id;";
 
                 var parameters = new
                 {
-                    user.id,
-                    user.user_per,
-                    user.password,
-                    user.gmail,
-                    user.registrationdate,
+                    Id = user.id,
+                    User_Per = user.user_per,
+                    Password = user.password,
+                    Gmail = user.gmail,
                 };
                 int rowsAffected = await _context.ExecuteAsync(sql, parameters);
 
@@ -173,7 +170,6 @@ namespace Data
                 throw new ExternalServiceException("Base de datos", $"Error al actualizar el usuario con ID {user.id}", ex);
             }
         }
-
 
         public async Task<bool> DeleteAsyncSQL(int id)
         {
@@ -191,6 +187,21 @@ namespace Data
             }
         }
 
+        public async Task<bool> DeleteLogicoUserAsyncSQL(int id)
+        {
+            try
+            {
+                var sql = "UPDATE usermulta SET isdelete = TRUE WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al realizar delete lógico del User: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
 

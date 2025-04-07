@@ -22,7 +22,7 @@ namespace Business
         {
             try
             {
-                var Roles = await _RolUserData.GetAllRolUserAsync();
+                var Roles = await _RolUserData.GetAllRolUserAsyncLinq();
                 var RolDto = MapToDTOList(Roles);
 
                 return RolDto;
@@ -44,7 +44,7 @@ namespace Business
             }
             try
             {
-                var roluser = await _RolUserData.GetByIdAsync(id);
+                var roluser = await _RolUserData.GetByIdAsyncLinq(id);
                 if (roluser == null)
                 {
                     _logger.LogInformation("No se encontró ningún usuario con ID: {RolUserId}", id);
@@ -88,7 +88,7 @@ namespace Business
             {
                 ValidateRolUser(rolUserDto);
 
-                var existingRolUser = await _RolUserData.GetByIdAsync(rolUserDto.Id);
+                var existingRolUser = await _RolUserData.GetByIdAsyncLinq(rolUserDto.Id);
                 if (existingRolUser == null)
                 {
                     throw new EntityNotFoundException("RolUser", $"No se encontró el RolUser con ID ");
@@ -98,7 +98,7 @@ namespace Business
                 existingRolUser.rolid = rolUserDto.RolId;
                 existingRolUser.userid = rolUserDto.UserId;
 
-                var success = await _RolUserData.UpdateAsync(existingRolUser);
+                var success = await _RolUserData.UpdateAsyncLinq(existingRolUser);
 
                 if (!success)
                 {
@@ -119,13 +119,13 @@ namespace Business
         {
             try
             {
-                var existingRoLUser = await _RolUserData.GetByIdAsync(id);
+                var existingRoLUser = await _RolUserData.GetByIdAsyncLinq(id);
                 if (existingRoLUser == null)
                 {
                     throw new EntityNotFoundException("Rol User", id);
                 }
 
-                return await _RolUserData.DeleteAsync(id);
+                return await _RolUserData.DeleteAsyncLinq(id);
             }
             catch (Exception ex)
             {

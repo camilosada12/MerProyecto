@@ -31,7 +31,7 @@ namespace Web.ContModulelers
         }
 
         /// <summary>
-        /// Obtener todos los User del sistema
+        /// Obtener todos los Module del sistema
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ModuleDto>), 200)]
@@ -40,13 +40,13 @@ namespace Web.ContModulelers
         {
             try
             {
-                var User = await _ModuleBusiness.GetAllModuleAsync();
-                return Ok(User);
+                var Module = await _ModuleBusiness.GetAllModuleAsync();
+                return Ok(Module);
             }
             catch (Exception ex)
             {
 
-                _logger.LogError(ex, "Error al obtener los User");
+                _logger.LogError(ex, "Error al obtener los Module");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -117,32 +117,32 @@ namespace Web.ContModulelers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(ModuleDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateModuleAsync(int id, [FromBody] ModuleDto moduleDto)
+        public async Task<IActionResult> UpdateModuleAsync([FromBody] ModuleDto moduleDto)
         {
             try
             {
 
-                var updatedModule = await _ModuleBusiness.UpdateModuleAsync(id, moduleDto);
+                var updatedModule = await _ModuleBusiness.UpdateModuleAsync(moduleDto);
                 return Ok(updatedModule);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar Modulo con ID: {ModuleId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar Modulo con ID: {ModuleId}", moduleDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Modulo no encontrado con ID: {ModuleId}", id);
+                _logger.LogInformation(ex, "Modulo no encontrado con ID: {ModuleId}", moduleDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar Modulo con ID: {ModuleId}", id);
+                _logger.LogError(ex, "Error al actualizar Modulo con ID: {ModuleId}", moduleDto.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -161,7 +161,7 @@ namespace Web.ContModulelers
                 {
                     return NotFound(new { message = "Module no encontrado" });
                 }
-                return NoContent();
+                return Ok(new { message = "Module eliminado exitosamente" });
             }
             catch (ValidationException ex)
             {
@@ -179,6 +179,41 @@ namespace Web.ContModulelers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpDelete("logico/{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicoFormAsync(int id)
+        {
+            try
+            {
+                var result = await _ModuleBusiness.DeleteLogicoModuleAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Module no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "Module eliminado lógicamente exitosamente" });
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar Module con ID: {ModuleId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Module no encontrado con ID: {ModuleId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar Module con ID: {ModuleId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }

@@ -39,13 +39,13 @@ namespace Data
         /// <returns>lista de roles </returns>
 
         // Atributo para linq
-        public async Task<IEnumerable<Rol>> GetRolesAsync()
+        public async Task<IEnumerable<Rol>> GetRolesAsyncLinq()
         {
             return await _context.Set<Rol>().ToListAsync();
         }
 
         //Atributo Linq
-        public async Task<Rol?> GetByIdAsync(int id)
+        public async Task<Rol?> GetByIdAsyncLinq(int id)
         {
             try
             {
@@ -56,13 +56,6 @@ namespace Data
                 _logger.LogError(ex, "Error al obtener el usuario con el Id {RolId}", id);
                 throw;
             }
-        }
-
-        // Atributo para SQL
-        public async Task<IEnumerable<Rol>> GetAllAsyncSQL()
-        {
-            string query = "SELECT * FROM rol";
-            return await _context.Set<Rol>().FromSqlRaw(query).ToListAsync();
         }
 
         //Atributo Linq
@@ -121,18 +114,24 @@ namespace Data
         //SQL
 
         //Atributo SQL
-        public async Task<Rol?> GetByRolIdAsyncSQL(int id)
+        public async Task<IEnumerable<Rol>> GetAllRolAsyncSQL()
+        {
+            const string query = @"SELECT * FROM rol WHERE isdelete = false";
+            return await _context.QueryAsync<Rol>(query);
+        }
+
+        //Atributo SQL
+        public async Task<Rol?> GetByRolIdAsyncSql(int id)
         {
             try
             {
-                var query = "SELECT * FROM rol WHERE id = @Id";  // "id" en minúsculas
-                var parametro = new NpgsqlParameter("@Id", id);
+                string query = @"SELECT * FROM public.rol WHERE id = @Id AND isdelete = false";
 
-                return await _context.Set<Rol>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
+                return await _context.QueryFirstOrDefaultAsync<Rol>(query, new { Id = id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el Rol con el Id {id}", id);
+                _logger.LogError(ex, "Error al obtener el usuario con el Id {rolId}", id);
                 throw;
             }
         }
@@ -142,20 +141,21 @@ namespace Data
         ///</summary>
         ///<param name="rolData">instancia del rol a crear </param>
         ///<returns> El rol creado.</returns>
-       
+
         //Atributo SQL 
         public async Task<Rol> CreateAsyncSQL(Rol rol)
         {
             try
             {
-                const string query = @"INSERT INTO public.""rol""(
-	                                ""role"", ""description"")
-	                                VALUES ( @Role, @Description)  RETURNING id;";
+                const string query = @"INSERT INTO public.rol(
+	                                role, description, isdelete)
+	                                VALUES ( @Role, @Description, @IsDelete)  RETURNING id;";
 
                 rol.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
                     Role = rol.role,
-                    Description = rol.description
+                    Description = rol.description,
+                    IsDelete = rol.isdelete,
                 });
 
                 return rol;
@@ -174,24 +174,25 @@ namespace Data
         /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
 
         //Atributo SQL
-        public async Task<bool> UpdateAsyncSQL(Rol Rol)
+        public async Task<bool> UpdateRolAsyncSQL(Rol Rol)
         {
             try
             {
                 var sql = @"
-            UPDATE public.rol
-            SET role = @Role, 
-            description = @Description, 
-            WHERE id = @Id;";
+                    UPDATE public.rol
+                    SET role = @Role, 
+                    description = @Description 
+                    WHERE id = @Id;";
 
-                var parametros = new[]
+                var parameters = new
                 {
-                    new NpgsqlParameter("@RolPer", Rol.role),
-                    new NpgsqlParameter("@Password", Rol.description),
-                    new NpgsqlParameter("@Id", Rol.id)
+                    Id = Rol.id,
+                    Role = Rol.role,
+                    Description = Rol.description
                 };
 
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+
                 return rowsAffected > 0;
             }
             catch (Exception ex)
@@ -221,6 +222,22 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el usuario: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteLogicoRolAsyncSQL(int id)
+        {
+            try
+            {
+                var sql = "UPDATE rol SET isdelete = TRUE WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
                 return false;
             }
         }

@@ -86,8 +86,6 @@ namespace Business
                 throw new ExternalServiceException("base de datos ", "Error al crear el User", ex);
             }
         }
-
-
         public async Task<UserDto> UpdateUserAsync(UserDto userDto)
         {
             try
@@ -104,7 +102,6 @@ namespace Business
                 existingUser.user_per = userDto.UserName;
                 existingUser.password = userDto.Password;
                 existingUser.gmail = userDto.Gmail;
-                existingUser.registrationdate = userDto.Registrationdate;
 
                 var success = await _userData.UpdateAsyncSQL(existingUser);
 
@@ -123,7 +120,7 @@ namespace Business
         }
 
 
-        // Método para eliminar una relación Rol de manera lógica
+        // Método para eliminar un dato de  User 
         public async Task<bool> DeleteUserAsync(int id)
         {
             try
@@ -133,6 +130,20 @@ namespace Business
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar lógicamente la relación User");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación User", ex);
+            }
+        }
+
+        // Método para eliminar una relación User de manera lógica
+        public async Task<bool> DeleteLogicoUserAsync(int id)
+        {
+            try
+            {
+                return await _userData.DeleteLogicoUserAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el User");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación User", ex);
             }
         }
@@ -160,7 +171,6 @@ namespace Business
                 UserName = User.user_per,
                 Password = User.password, 
                 Gmail = User.gmail,
-                Registrationdate = User.registrationdate
             };
         }
 
@@ -173,7 +183,7 @@ namespace Business
                 user_per = UserDto.UserName,
                 password = UserDto.Password, 
                 gmail = UserDto.Gmail,
-                registrationdate = UserDto.Registrationdate
+                isdelete = false
             };
         }
 

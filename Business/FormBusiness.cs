@@ -84,13 +84,13 @@ namespace Business
             }
         }
 
-        public async Task<FormDto> UpdateFormAsync(int id ,FormDto formDto)
+        public async Task<FormDto> UpdateFormAsync(FormDto formDto)
         {
             try
             {
                 ValidateForm(formDto);
 
-                var existingForm = await _formData.GetByIdAsyncLinq(id);
+                var existingForm = await _formData.GetByFormIdAsyncSql(formDto.Id);
                 if (existingForm == null)
                 {
                     throw new EntityNotFoundException("Form", $"No se encontró la relación con {formDto.Id}");
@@ -99,10 +99,8 @@ namespace Business
                 // Convertir la fecha a UTC antes de actualizar
                 existingForm.name = formDto.Name;
                 existingForm.description = formDto.Description;
-                existingForm.statu = formDto.statu;
-                existingForm.datacreation = formDto.DateCreation.ToUniversalTime();
 
-                var success = await _formData.UpdateAsyncLinq(existingForm);
+                var success = await _formData.UpdateFormAsyncSQL(existingForm);
 
                 if (!success)
                 {
@@ -132,6 +130,20 @@ namespace Business
             }
         }
 
+        public async Task<bool> DeleteLogicoFormAsync(int id)
+        {
+            try
+            {
+                return await _formData.DeleteLogicoAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el Form");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Form", ex);
+            }
+        }
+
+
         //Atributo para validar el DTO
         private void ValidateForm(FormDto FormDto)
         {
@@ -155,8 +167,6 @@ namespace Business
                 Id = form.id,
                 Name = form.name,
                 Description = form.description,
-                DateCreation = form.datacreation,
-                statu = form.statu
             };
         }
 
@@ -168,8 +178,7 @@ namespace Business
                 id = formDto.Id,
                 name = formDto.Name,
                 description = formDto.Description,
-                datacreation = formDto.DateCreation,
-                statu = formDto.statu
+                isdelete = false
             };
         }
 

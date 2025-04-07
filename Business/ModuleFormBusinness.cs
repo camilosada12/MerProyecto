@@ -26,7 +26,7 @@ namespace Business
         {
             try
             {
-                var Modules = await _ModuleFormData.GetAllModuleFormAsync();
+                var Modules = await _ModuleFormData.GetAllModuleFormAsyncLinq();
                 var ModulesDTO = MapToDTOList(Modules);
 
                 return ModulesDTO;
@@ -49,7 +49,7 @@ namespace Business
 
             try
             {
-                var Module = await _ModuleFormData.GetByIdAsync(id);
+                var Module = await _ModuleFormData.GetByIdAsyncLinq(id);
                 if (Module == null)
                 {
                     _logger.LogInformation("No se encontró ningún ModuleForm con ID: {ModuleFormId}", id);
@@ -92,7 +92,7 @@ namespace Business
             try
             {
                 ValidateModuleForm(moduleForDTO);
-                var existingModuleForm = await _ModuleFormData.GetByIdAsync(moduleForDTO.Id);
+                var existingModuleForm = await _ModuleFormData.GetByIdAsyncLinq(moduleForDTO.Id);
                 if (existingModuleForm == null)
                 {
                     throw new EntityNotFoundException("ModuleFormDto", "No se encontró la relación FormModule");
@@ -103,7 +103,7 @@ namespace Business
                 existingModuleForm.moduleid = moduleForDTO.ModuleId;
                 existingModuleForm.formid = moduleForDTO.FormId;
 
-                var success = await _ModuleFormData.UpdateAsync(existingModuleForm);
+                var success = await _ModuleFormData.UpdateAsyncLinq(existingModuleForm);
 
                 if (!success)
                 {
@@ -124,13 +124,13 @@ namespace Business
         {
             try
             {
-                var existingModuleForm = await _ModuleFormData.GetByIdAsync(id);
+                var existingModuleForm = await _ModuleFormData.GetByIdAsyncLinq(id);
                 if (existingModuleForm == null)
                 {
                     throw new EntityNotFoundException("Rol User", id);
                 }
 
-                return await _ModuleFormData.DeleteAsync(id);
+                return await _ModuleFormData.DeleteAsyncLinq(id);
             }
             catch (Exception ex)
             {

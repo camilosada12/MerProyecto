@@ -50,7 +50,7 @@ namespace Web.Controllers
         }
 
         ///<summary>
-        /// Obtener un User especificio por su ID
+        /// Obtener un person especificio por su ID
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PersonDto), 200)]
@@ -112,31 +112,31 @@ namespace Web.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(PersonDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] PersonDto personDto)
+        public async Task<IActionResult> UpdatePersonAsync([FromBody] PersonDto personDto)
         {
             try
             {
-                var updatedPerson = await _PersonBusiness.UpdatePersonAsync(id, personDto);
+                var updatedPerson = await _PersonBusiness.UpdatePersonAsync(personDto);
                 return Ok(updatedPerson);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar Persona con ID: {PersonId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar Persona con ID: {PersonId}", personDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Persona no encontrado con ID: {PersonId}", id);
+                _logger.LogInformation(ex, "Persona no encontrado con ID: {PersonId}", personDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar Persona con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error al actualizar Persona con ID: {PersonId}", personDto.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -155,7 +155,7 @@ namespace Web.Controllers
                 {
                     return NotFound(new { message = "Persona no encontrado" });
                 }
-                return NoContent();
+                return Ok(new { message = "Person eliminado exitosamente" });
             }
             catch (ValidationException ex)
             {
@@ -170,6 +170,40 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar Persona con ID: {PersonId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("logico/{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicoFormAsync(int id)
+        {
+            try
+            {
+                var result = await _PersonBusiness.DeleteLogicoPersonAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Person no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "Person eliminado lógicamente exitosamente" });
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar Person con ID: {PersonId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Person no encontrado con ID: {PersonId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar Person con ID: {PersonId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

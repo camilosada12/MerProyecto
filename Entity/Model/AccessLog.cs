@@ -15,5 +15,6 @@ namespace Entity.Model
         public string Details { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
+        public bool isDelete { get; set; }
     }
 }

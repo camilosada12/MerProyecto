@@ -25,7 +25,7 @@ namespace Business
         {
             try
             {
-                var roles = await _rolData.GetAllAsyncSQL();
+                var roles = await _rolData.GetAllRolAsyncSQL();
                 var rolesDTO = MapToDTOList(roles);
                 return rolesDTO;
             }
@@ -47,7 +47,7 @@ namespace Business
 
             try
             {
-                var Rol = await _rolData.GetByRolIdAsyncSQL(id);
+                var Rol = await _rolData.GetByRolIdAsyncSql(id);
                 if (Rol == null)
                 {
                     _logger.LogInformation("No se encontro ningun Rol con Id: {RolId}", id);
@@ -85,23 +85,23 @@ namespace Business
             }
         }
 
-        public async Task<RolDto> UpdateRolAsync(int id, RolDto RolDto)
+        public async Task<RolDto> UpdateRolAsync(RolDto RolDto)
         {
             try
             {
                 ValidateRol(RolDto);
 
-                var existingRol = await _rolData.GetByIdAsync(id);
+                var existingRol = await _rolData.GetByRolIdAsyncSql(RolDto.Id);
                 if (existingRol == null)
                 {
-                    throw new EntityNotFoundException("Rol", $"No se encontró el usuario con ID {id}");
+                    throw new EntityNotFoundException("Rol", $"No se encontró el usuario con ID {RolDto.Id}");
                 }
 
                 // Convertir la fecha a UTC antes de actualizar
                 existingRol.role = RolDto.Role;
                 existingRol.description = RolDto.Description;
 
-                var success = await _rolData.UpdateAsyncLinq(existingRol);
+                var success = await _rolData.UpdateRolAsyncSQL(existingRol);
 
                 if (!success)
                 {
@@ -112,7 +112,7 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error al actualizar el usuario con ID {id}");
+                _logger.LogError(ex, $"Error al actualizar el usuario con ID {RolDto.Id}");
                 throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario", ex);
             }
         }
@@ -127,6 +127,19 @@ namespace Business
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar lógicamente la relación Rol");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Rol", ex);
+            }
+        }
+
+        public async Task<bool> DeleteLogicoRolAsync(int id)
+        {
+            try
+            {
+                return await _rolData.DeleteLogicoRolAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el Rol");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Rol", ex);
             }
         }
@@ -164,7 +177,8 @@ namespace Business
             {
                 id = RolDto.Id,
                 role = RolDto.Role,
-                description = RolDto.Description // Si existe en la entidad
+                description = RolDto.Description,
+                isdelete = false
             };
         }
 

@@ -35,15 +35,6 @@ namespace Data
             return await _context.Set<Person>().ToListAsync();
         }
 
-        //Atributo SQL
-        public async Task<IEnumerable<Person>> GetAllPersonAsyncSQL()
-        {
-
-            string query = "SELECT * FROM person";
-            return await _context.Set<Person>().FromSqlRaw(query).ToListAsync();
-        }
-
-
         //Atributo Linq
         public async Task<Person?> GetByIdAsyncLinq(int id)
         {
@@ -55,23 +46,6 @@ namespace Data
             {
                 _logger.LogError(ex, "Error al obtener person con Id {PersonaId}", id);
                 throw; // Re-lanza la excepcion para que sea manejada en capas superiores
-            }
-        }
-
-        //Atributo SQL
-        public async Task<Person?> GetByIdAsyncSQL(int id)
-        {
-            try
-            {
-                var query = "SELECT * FROM person WHERE id = @Id";  // "id" en minúsculas
-                var parametro = new NpgsqlParameter("@Id", id);
-
-                return await _context.Set<Person>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el Person con el Id {id}", id);
-                throw;
             }
         }
 
@@ -93,33 +67,6 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al crear la  tabla persona: {ex.Message}");
-                throw;
-            }
-        }
-
-        //Atributo SQL
-        public async Task<Person> CreatePersonAsyncSQL(Person person)
-        {
-            try
-            {
-                const string query = @"
-                   INSERT INTO public.person(
-	                name, lastname, phone)
-	                VALUES (@Name, @LastName, @Phone)
-                    RETURNING id;";
-
-                person.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
-                {
-                    Name = person.name,
-                    LastName = person.lastname,
-                    Phone = person.phone
-                });
-
-                return person;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "No se pudo agregar la persona.");
                 throw;
             }
         }
@@ -146,39 +93,6 @@ namespace Data
             }
         }
 
-        //Atributo SQL
-        public async Task<bool> UpdateAsyncSQL(Person person)
-        {
-            try
-            {
-                // Consulta SQL para actualizar el usuario
-                var sql = "UPDATE Person SET " +
-                          "Name = @name, " +
-                          "LastName = @lastName, " +
-                          "Phone = @phone, " +
-                          "WHERE Id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
-
-                // Parámetros SQL que se pasan a la consulta
-                var parametros = new SqlParameter[]
-                {
-                    new SqlParameter("@name", person.name),
-                    new SqlParameter("@lastName", person.lastname),
-                    new SqlParameter("@phone", person.phone),
-                    new SqlParameter("@Id", person.id),
-                };
-
-                // Ejecutar la consulta SQL
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
-
-                // Verificar si la actualización afectó alguna fila (es decir, si el usuario fue actualizado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al actualizar el usuario: {ex.Message}");
-                return false;
-            }
-        }
         ///<summary>
         ///Elimina una Persona de la base de datos
         /// </summary>
@@ -205,6 +119,99 @@ namespace Data
             }
         }
 
+        //SQL
+
+
+        //Atributo SQL
+        public async Task<IEnumerable<Person>> GetAllPersonAsyncSQL()
+        {
+
+            const string query = @"SELECT * FROM person WHERE isdelete = false";
+
+            return await _context.Set<Person>().FromSqlRaw(query).ToListAsync();
+        }
+
+        //Atributo SQL
+        public async Task<Person?> GetByIdAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"SELECT * FROM public.person WHERE id = @Id AND isdelete = false";
+
+                return await _context.QueryFirstOrDefaultAsync<Person>(query, new { Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el Person con el Id {id}", id);
+                throw;
+            }
+        }
+
+        //Atributo SQL
+        public async Task<Person> CreatePersonAsyncSQL(Person person)
+        {
+            try
+            {
+                // Forzar valor por defecto en la creación
+                person.isdelete = false;
+
+                const string query = @"
+                   INSERT INTO public.person(
+	                name, lastname, phone,isdelete)
+	                VALUES (@Name, @LastName, @Phone, @IsDelete)
+                    RETURNING id;";
+
+                person.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    Name = person.name,
+                    LastName = person.lastname,
+                    Phone = person.phone,
+                    IsDelete = person.isdelete
+                });
+
+                return person;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "No se pudo agregar la persona.");
+                throw;
+            }
+        }
+
+        //Atributo SQL
+        public async Task<bool> UpdateAsyncSQL(Person person)
+        {
+            try
+            {
+                // Consulta SQL para actualizar el usuario
+                var sql = "UPDATE Person SET " +
+                          "name = @Name, " +
+                          "lastname = @LastName, " +
+                          "phone = @Phone " +
+                          "WHERE Id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
+
+                // Parámetros SQL que se pasan a la consulta
+                var parameters = new
+                {
+                    Id = person.id,
+                    Name = person.name,
+                    LastName = person.lastname,
+                    Phone = person.phone
+                };
+
+                // Ejecutar la consulta SQL
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+
+                // Verificar si la actualización afectó alguna fila (es decir, si el usuario fue actualizado)
+                return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el usuario: {ex.Message}");
+                return false;
+            }
+        }
+
         //Atributo SQL
         public async Task<bool> DeletePermissionAsyncSQL(int id)
         {
@@ -222,5 +229,21 @@ namespace Data
             }
         }
 
+        //atributo SQL
+        public async Task<bool> DeleteLogicoPersonAsyncSQL(int id)
+        {
+            try
+            {
+                var sql = "UPDATE person SET isdelete = TRUE WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

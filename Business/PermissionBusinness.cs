@@ -50,7 +50,7 @@ namespace Business
 
             try
             {
-                var Permission = await _PermissionData.GetPermissionByIdAsync(id);
+                var Permission = await _PermissionData.GetByPermissionIdAsyncSQL(id);
                 if(Permission == null)
                 {
                     _logger.LogInformation("No se encontro ningun permiso con Id : {PermissionId}", id);
@@ -74,7 +74,7 @@ namespace Business
 
                 var permission = MapToEntity(PermissionDto);
 
-                var PermissionCreado = await _PermissionData.CreateAsync(permission);
+                var PermissionCreado = await _PermissionData.CreatePermissionAsyncSQL(permission);
                 _logger.LogInformation("Permission insertado con ID: {UserId}", PermissionCreado.id);
 
                 return MapToDTO(PermissionCreado);
@@ -86,13 +86,13 @@ namespace Business
             }
         }
 
-        public async Task<PermissionDto> UpdatePermissionAsync(int id , PermissionDto permissionDto)
+        public async Task<PermissionDto> UpdatePermissionAsync(PermissionDto permissionDto)
         {
             try
             {
                 validatePermission(permissionDto);
 
-                var existingPermission = await _PermissionData.GetPermissionByIdAsync(id);
+                var existingPermission = await _PermissionData.GetByPermissionIdAsyncSQL(permissionDto.Id);
 
                 if (existingPermission == null)
                 {
@@ -102,7 +102,7 @@ namespace Business
                 existingPermission.name = permissionDto.Name;
                 existingPermission.description = permissionDto.Description;
 
-                var success = await _PermissionData.UpdateAsync(existingPermission);
+                var success = await _PermissionData.UpdateAsyncSQL(existingPermission);
 
                 if (!success)
                 {
@@ -129,6 +129,19 @@ namespace Business
             {
                 _logger.LogError(ex, "Error al eliminar lógicamente la relación Permission");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Permission", ex);
+            }
+        }
+
+        public async Task<bool> DeleteLogicoPermissionAsync(int id)
+        {
+            try
+            {
+                return await _PermissionData.DeleteLogicoPermissionAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el Form");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Form", ex);
             }
         }
 
@@ -164,7 +177,8 @@ namespace Business
             {
                 id = PermissionDto.Id,
                 name = PermissionDto.Name,
-                description = PermissionDto.Description
+                description = PermissionDto.Description,
+                isdelete = false
             };
         }
 

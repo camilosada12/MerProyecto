@@ -5413,23 +5413,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\SENA\\.nuget\\packages\\": {},
+    "C:\\Users\\EDITH\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\SENA\\Desktop\\Security\\Web\\Web.csproj",
+      "projectUniqueName": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Web\\Web.csproj",
       "projectName": "Web",
-      "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Web\\Web.csproj",
-      "packagesPath": "C:\\Users\\SENA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\SENA\\Desktop\\Security\\Web\\obj\\",
+      "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Web\\Web.csproj",
+      "packagesPath": "C:\\Users\\EDITH\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\SENA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\EDITH\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5445,8 +5445,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj": {
-              "projectPath": "C:\\Users\\SENA\\Desktop\\Security\\Business\\Business.csproj"
+            "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj": {
+              "projectPath": "C:\\Users\\EDITH\\Desktop\\MerProyecto\\Business\\Business.csproj"
             }
           }
         }
@@ -5460,7 +5460,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -5510,7 +5511,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -30,20 +30,13 @@ namespace Data
         /// <returns>Lista de permisos</returns>
 
         //Atributo Linq
-        public async Task<IEnumerable<Permission>> GetAllAsync()
+        public async Task<IEnumerable<Permission>> GetAllAsyncLinq()
         {
             return await _context.Set<Permission>().ToListAsync();
         }
 
-        //Atributo SQL
-        public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
-        {
-            string query = "SELECT * FROM permission";
-            return await _context.Set<Permission>().FromSqlRaw(query).ToListAsync();
-        }
-
         //Atributo Linq
-        public async Task<Permission?> GetPermissionByIdAsync(int id)
+        public async Task<Permission?> GetPermissionByIdAsyncLinq(int id)
         {
             try
             {
@@ -56,23 +49,6 @@ namespace Data
             }
         }
 
-        //Atributo SQL
-        public async Task<Permission?> GetByPermissionIdAsyncSQL(int id)
-        {
-            try
-            {
-                var query = "SELECT * FROM permission WHERE id = @Id";  // "id" en minúsculas
-                var parametro = new NpgsqlParameter("@Id", id);
-
-                return await _context.Set<Permission>().FromSqlRaw(query, parametro).FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el Permission con el Id {id}", id);
-                throw;
-            }
-        }
-
         ///<summary>
         ///crea un nuevo permission en la base de datos.
         /// </summary>
@@ -80,7 +56,7 @@ namespace Data
         /// <returns>el Permission creado</returns>
 
         //Atributo Linq
-        public async Task<Permission> CreateAsync(Permission permission)
+        public async Task<Permission> CreateAsyncLinq(Permission permission)
         {
             try
             {
@@ -95,32 +71,6 @@ namespace Data
             }
         }
 
-        //Atributo SQL
-        public async Task<Permission> CreatePermissionAsyncSQL(Permission permission)
-        {
-            try
-            {
-                const string query = @"
-                    INSERT INTO public.""permission""(
-	                ""name"", ""description"")
-	                VALUES (@Name,@Description);
-                    RETURNING id;";
-
-                permission.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
-                {
-                    Name = permission.name,
-                    Description = permission.description,
-                });
-
-                return permission;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "No se pudo agregar el Permission.");
-                throw;
-            }
-        }
-
         ///<summary>
         ///Actualiza los permission  en la base de datos.
         /// </summary>
@@ -128,7 +78,7 @@ namespace Data
         /// <returns>True si la operacion es exitosa, false en caso contrario</returns>
 
         //Atributo Linq
-        public async Task<bool> UpdateAsync(Permission permission)
+        public async Task<bool> UpdateAsyncLinq(Permission permission)
         {
             try
             {
@@ -143,38 +93,6 @@ namespace Data
             }
         }
 
-        //Atributo SQL
-        public async Task<bool> UpdateAsyncSQL(Permission permission)
-        {
-            try
-            {
-                // Consulta SQL para actualizar el Permission
-                var sql = "UPDATE permission SET " +
-                          "Name = @name, " +
-                          "Description = @description, " +
-                          "WHERE Id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
-
-                // Parámetros SQL que se pasan a la consulta
-                var parametros = new SqlParameter[]
-                {
-                      new SqlParameter("@name", permission.name),
-                      new SqlParameter("@description", permission.description),
-                      new SqlParameter("@Id", permission.id) // El ID es necesario para la condición WHERE
-                };
-
-                // Ejecutar la consulta SQL
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
-
-                // Verificar si la actualización afectó alguna fila (es decir, si el Permission fue actualizado)
-                return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al actualizar el Permission: {ex.Message}");
-                return false;
-            }
-        }
-
         ///<summary>
         ///elimina un permission en la base de datos.
         /// </summary>
@@ -182,7 +100,7 @@ namespace Data
         /// <returns>True si la eliminacion fue exitosa, false en caso contrario</returns>
 
         //Atributo Linq
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsyncLinq(int id)
         {
             try
             {
@@ -201,6 +119,92 @@ namespace Data
             }
         }
 
+        //SQL
+
+        //Atributo SQL
+        public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
+        {
+            const string query = @"SELECT * FROM permission WHERE isdelete = false";
+            return await _context.Set<Permission>().FromSqlRaw(query).ToListAsync();
+        }
+
+        //Atributo SQL
+        public async Task<Permission?> GetByPermissionIdAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"SELECT * FROM public.permission WHERE id = @Id AND isdelete = false";
+
+                return await _context.QueryFirstOrDefaultAsync<Permission>(query, new { Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el Permission con el Id {id}", id);
+                throw;
+            }
+        }
+
+        //Atributo SQL
+        public async Task<Permission> CreatePermissionAsyncSQL(Permission permission)
+        {
+            // Forzar valor por defecto en la creación
+            permission.isdelete = false;
+
+            try
+            {
+                const string query = @"
+                    INSERT INTO public.permission(
+	                name, description, isdelete)
+	                VALUES (@Name,@Description, @IsDelete)
+                    RETURNING id;";
+
+                permission.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    Name = permission.name,
+                    Description = permission.description,
+                    IsDelete = permission.isdelete,
+                });
+
+                return permission;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "No se pudo agregar el Permission.");
+                throw;
+            }
+        }
+
+        //Atributo SQL
+        public async Task<bool> UpdateAsyncSQL(Permission permission)
+        {
+            try
+            {
+                // Consulta SQL para actualizar el Permission
+                var sql = "UPDATE permission SET " +
+                          "name = @Name, " +
+                          "description = @Description " +
+                          "WHERE id = @Id";  // Asegúrate de que la columna 'Id' es la clave primaria
+
+                var parameters = new
+                {
+                    Id = permission.id,
+                    Name = permission.name,
+                    Description = permission.description
+                };
+
+                // Ejecutar la consulta SQL
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+
+                return rowsAffected > 0;  
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el Permission: {ex.Message}");
+                return false;
+            }
+        }
+
+
         //Atributo SQL
         public async Task<bool> DeletePermissionAsyncSQL(int id)
         {
@@ -217,6 +221,23 @@ namespace Data
                 return false;
             }
         }
+
+        public async Task<bool> DeleteLogicoPermissionAsyncSQL(int id)
+        {
+            try
+            {
+                var sql = "UPDATE permission SET isdelete = TRUE WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
+                return false;
+            }
+        }
+
 
     }
 }

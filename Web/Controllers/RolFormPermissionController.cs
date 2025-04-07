@@ -25,7 +25,7 @@ namespace Web.Controllers
         }
 
         /// <summary>
-        /// Obtener todos los rol user del sistema
+        /// Obtener todos los rol RolFormPermission del sistema
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RolFormPermissionDto>), 200)]
@@ -62,7 +62,7 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogInformation(ex, "Validacion fallida para RolFormPermission user con ID: {RolFormPermissionId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para RolFormPermission RolFormPermission con ID: {RolFormPermissionId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
@@ -73,7 +73,7 @@ namespace Web.Controllers
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener el RolFormPermission user con ID: {RolFormPermissionId}", id);
+                _logger.LogError(ex, "Error al obtener el RolFormPermission RolFormPermission con ID: {RolFormPermissionId}", id);
                 throw;
             }
         }
@@ -100,12 +100,12 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validacion fallida al creal el Module Form");
+                _logger.LogWarning(ex, "Validacion fallida al creal el updatedRolFormPermission");
                 return BadRequest(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al crear el Module Form");
+                _logger.LogError(ex, "Error al crear el updatedRolFormPermission");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -118,7 +118,7 @@ namespace Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolUser([FromBody] RolFormPermissionDto rolFormPermissionDto)
+        public async Task<IActionResult> UpdateRolFormPermission([FromBody] RolFormPermissionDto rolFormPermissionDto)
         {
             try
             {
@@ -128,23 +128,23 @@ namespace Web.Controllers
                     return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
                 }
 
-                var updatedRolFormModule = await _RolFormPermissionBusiness.UpdateRolFormPermissionAsync(rolFormPermissionDto);
+                var updatedRolFormPermission = await _RolFormPermissionBusiness.UpdateRolFormPermissionAsync(rolFormPermissionDto);
 
-                return Ok(updatedRolFormModule);
+                return Ok(updatedRolFormPermission);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el moduleForm con ID: {moduleFormId}");
+                _logger.LogWarning(ex, "Validación fallida al actualizar el RolFormPermission con ID: {RolFormPermissionId}");
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el module con ID: {moduleFormId}");
+                _logger.LogInformation(ex, "No se encontró el RolFormPermission con ID: {RolFormPermissionId}");
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el module con ID: {moduleFormId}");
+                _logger.LogError(ex, "Error al actualizar el RolFormPermission con ID: {RolFormPermissionId}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -164,14 +164,14 @@ namespace Web.Controllers
 
                 if (!deleted)
                 {
-                    return NotFound(new { message = "rol user no encontrado o ya eliminado" });
+                    return NotFound(new { message = "rol form Permission no encontrado o ya eliminado" });
                 }
 
-                return Ok(new { message = "rol user eliminado exitosamente" });
+                return Ok(new { message = "rol Form Permission eliminado exitosamente" });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol user con ID: {RolUserId}", id);
+                _logger.LogError(ex, "Error al eliminar elrol Form Permission con ID: {RolFormPermissionId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

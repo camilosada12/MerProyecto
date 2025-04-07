@@ -86,12 +86,12 @@ namespace Business
             }
         }
 
-        public async Task<PersonDto> UpdatePersonAsync(int id, PersonDto personDto)
+        public async Task<PersonDto> UpdatePersonAsync(PersonDto personDto)
         {
             try
             {
                 ValidatePerson(personDto);
-                var existingPerson = await _PersonData.GetByIdAsyncLinq(id);
+                var existingPerson = await _PersonData.GetByIdAsyncSQL(personDto.Id);
                 if (existingPerson == null)
                 {
                     throw new EntityNotFoundException("Person", "No se encontró la relación Person");
@@ -102,7 +102,7 @@ namespace Business
                 existingPerson.lastname = personDto.LastName;
                 existingPerson.phone = personDto.Phone;
 
-                var success = await _PersonData.UpdatePersonAsyncLinq(existingPerson);
+                var success = await _PersonData.UpdateAsyncSQL(existingPerson);
 
                 if (!success)
                 {
@@ -128,6 +128,19 @@ namespace Business
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar permanentemente la relación person");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación person", ex);
+            }
+        }
+
+        public async Task<bool> DeleteLogicoPersonAsync(int id)
+        {
+            try
+            {
+                return await _PersonData.DeleteLogicoPersonAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el person");
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación person", ex);
             }
         }
@@ -167,7 +180,8 @@ namespace Business
                 id = PersonDto.Id,
                 name = PersonDto.Name,
                 lastname = PersonDto.LastName,
-                phone = PersonDto.Phone
+                phone = PersonDto.Phone,
+                isdelete = false
             };
         }
 

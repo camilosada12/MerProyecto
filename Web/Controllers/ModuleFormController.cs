@@ -30,7 +30,7 @@ namespace Web.Controllers
         }
 
         /// <summary>
-        /// Obtener todos los rol user del sistema
+        /// Obtener todos los rol ModuleForm del sistema
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ModuleFormDto>), 200)]
@@ -67,18 +67,18 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogInformation(ex, "Validacion fallida para ModuleForm user con ID: {ModuleFormUserId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para ModuleForm Module con ID: {ModuleFormId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
 
-                _logger.LogInformation(ex, "Form no encontrado con ID: {ModuleFormUserId}", id);
+                _logger.LogInformation(ex, "Form no encontrado con ID: {ModuleFormId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener el ModuleForm user con ID: {ModuleFormUserId}", id);
+                _logger.LogError(ex, "Error al obtener el ModuleForm ModuleForm con ID: {ModuleFormId}", id);
                 throw;
             }
         }
@@ -123,7 +123,7 @@ namespace Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolUser([FromBody] ModuleFormDto moduleFormDto)
+        public async Task<IActionResult> UpdateModuleForm([FromBody] ModuleFormDto moduleFormDto)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteRolUser(int id)
+        public async Task<IActionResult> DeleteModuleForm(int id)
         {
             try
             {
@@ -169,14 +169,14 @@ namespace Web.Controllers
 
                 if (!deleted)
                 {
-                    return NotFound(new { message = "rol user no encontrado o ya eliminado" });
+                    return NotFound(new { message = "rol ModuleForm no encontrado o ya eliminado" });
                 }
 
-                return Ok(new { message = "rol user eliminado exitosamente" });
+                return Ok(new { message = "rol ModuleForm eliminado exitosamente" });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol user con ID: {RolUserId}", id);
+                _logger.LogError(ex, "Error al eliminar el rol ModuleForm con ID: {ModuleFormId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

@@ -123,7 +123,6 @@ namespace Web.ContUserlers
         {
             try
             {
-                userDto.Registrationdate = userDto.Registrationdate.ToUniversalTime();
 
                 var updatedUser = await _UserBusiness.UpdateUserAsync(userDto);
                 return Ok(updatedUser);
@@ -159,7 +158,7 @@ namespace Web.ContUserlers
                 {
                     return NotFound(new { message = "Usuario no encontrado" });
                 }
-                return NoContent();
+                return Ok(new { message = "User eliminado exitosamente" });
             }
             catch (ValidationException ex)
             {
@@ -174,6 +173,40 @@ namespace Web.ContUserlers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar usuario con ID: {UserId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("logico/{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicoUserAsync(int id)
+        {
+            try
+            {
+                var result = await _UserBusiness.DeleteLogicoUserAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "User no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "User eliminado lógicamente exitosamente" });
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar User con ID: {UserId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "User no encontrado con ID: {UserId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar User con ID: {UserId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

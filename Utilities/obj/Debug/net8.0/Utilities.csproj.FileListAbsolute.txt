@@ -69,3 +69,15 @@ C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.dll
 C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\refint\Utilities.dll
 C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\Utilities.pdb
 C:\Users\SENA\Desktop\Security\Utilities\obj\Debug\net8.0\ref\Utilities.dll
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\bin\Debug\net8.0\Utilities.deps.json
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\bin\Debug\net8.0\Utilities.dll
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\bin\Debug\net8.0\Utilities.pdb
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfoInputs.cache
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.AssemblyInfo.cs
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.csproj.CoreCompileInputs.cache
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.sourcelink.json
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.dll
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\refint\Utilities.dll
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\Utilities.pdb
+C:\Users\EDITH\Desktop\MerProyecto\Utilities\obj\Debug\net8.0\ref\Utilities.dll

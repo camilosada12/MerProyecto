@@ -38,10 +38,107 @@ namespace Data
         /// </summary>
         /// <returns>Lista de Rol con los usuarios</returns>
         /// 
-        public async Task<IEnumerable<RolUser>> GetAllRolUserAsync()
+        public async Task<IEnumerable<RolUser>> GetAllRolUserAsyncLinq()
         {
             return await _context.Set<RolUser>().ToListAsync();
         }
+
+        /// <summary>
+        /// Obtiene un usuario con un rol especificos por su identificador CON linQ
+        /// </summary>
+        public async Task<RolUser?> GetByIdAsyncLinq(int id)
+        {
+            try
+            {
+                return await _context.Set<RolUser>().FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener usuario con su rol con ID {UserRolId}", id);
+                throw;//Re-lanza la excepcion para sea manejada en capas superiores
+            }
+        }
+
+        ///<summary>
+        ///crea un nuevo RolUser en la base de datos.
+        /// </summary>
+        /// <param name="rolUser">instancia del RolUser a crear</param>
+        /// <returns>el RolUser creado</returns>
+
+        public async Task<RolUser> CreateAsyncLinq(RolUser rolUser)
+        {
+            try
+            {
+                await _context.Set<RolUser>().AddAsync(rolUser);
+                await _context.SaveChangesAsync();
+
+                // Retornar directamente el objeto creado sin recargar sus relaciones
+                return rolUser;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear el RolUser");
+                throw;
+            }
+        }
+
+        //Metodo SQL
+        /// <summary>
+        /// Actualiza un usuario con su rol existente en la base de datos
+        /// </summary>
+        /// <param name="user">Objeto con la informacion actualizada</param>
+        /// <returns>True si la operacion fue exitosa, False en caso contrario</returns>
+        /// 
+
+        ///<summary>
+        ///Actualiza un nuevo RolUser en la base de datos.
+        /// </summary>
+        /// <param name="rolUser">objeto con la informacion actualizada</param>
+        /// <returns>True si la operacion es exitosa, false en caso contrario</returns>
+
+        //Metodo linq
+        public async Task<bool> UpdateAsyncLinq(RolUser rolUser)
+        {
+            try
+            {
+                _context.Set<RolUser>().Update(rolUser);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el RolUser: {ex.Message}");
+                return false;
+            }
+        }
+
+        ///<summary>
+        ///elimina un nuevo RolUser en la base de datos.
+        /// </summary>
+        /// <param name="id">Identificador unico del RolUser a eliminar</param>
+        /// <returns>True si la eliminacion fue exitosa, false en caso contrario</returns>
+
+        //Metodo Linq
+        public async Task<bool> DeleteAsyncLinq(int id)
+        {
+            try
+            {
+                var rolUser = await _context.Set<RolUser>().FindAsync(id);
+                if (rolUser == null)
+                    return false;
+
+                _context.Set<RolUser>().Remove(rolUser);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar el RolUser: {ex.Message}");
+                return false;
+            }
+        }
+
+        //SQL
 
         //Atributo SQL
         public async Task<RolUserDto?> GetAllAsyncLinqSQL(int id)
@@ -68,22 +165,6 @@ namespace Data
             {
                 _logger.LogError(ex, "Error al obtener el RolUser con ID {RolUserId}", id);
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// Obtiene un usuario con un rol especificos por su identificador CON linQ
-        /// </summary>
-        public async Task<RolUser?> GetByIdAsync(int id)
-        {
-            try
-            {
-                return await _context.Set<RolUser>().FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener usuario con su rol con ID {UserRolId}", id);
-                throw;//Re-lanza la excepcion para sea manejada en capas superiores
             }
         }
 
@@ -115,39 +196,7 @@ namespace Data
             }
         }
 
-        ///<summary>
-        ///crea un nuevo RolUser en la base de datos.
-        /// </summary>
-        /// <param name="rolUser">instancia del RolUser a crear</param>
-        /// <returns>el RolUser creado</returns>
-
-        public async Task<RolUser> CreateAsync(RolUser rolUser)
-        {
-            try
-            {
-                await _context.Set<RolUser>().AddAsync(rolUser);
-                await _context.SaveChangesAsync();
-
-                // Retornar directamente el objeto creado sin recargar sus relaciones
-                return rolUser;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear el RolUser");
-                throw;
-            }
-        }
-
-        //Metodo SQL
-        /// <summary>
-        /// Actualiza un usuario con su rol existente en la base de datos
-        /// </summary>
-        /// <param name="user">Objeto con la informacion actualizada</param>
-        /// <returns>True si la operacion fue exitosa, False en caso contrario</returns>
-        /// 
-
-        //Metodo para crear un nuevo rol user con sentencia SQl
-
+        //Metodo SQl
         public async Task<RolUser> CreateAsyncSql(RolUser rolUsers)
         {
             try
@@ -174,30 +223,7 @@ namespace Data
             }
         }
 
-        ///<summary>
-        ///Actualiza un nuevo RolUser en la base de datos.
-        /// </summary>
-        /// <param name="rolUser">objeto con la informacion actualizada</param>
-        /// <returns>True si la operacion es exitosa, false en caso contrario</returns>
-
-        //Metodo linq
-        public async Task<bool> UpdateAsync(RolUser rolUser)
-        {
-            try
-            {
-                _context.Set<RolUser>().Update(rolUser);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al actualizar el RolUser: {ex.Message}");
-                return false;
-            }
-        }
-
         //Metodo SQL
-
         public async Task<bool> UpdateAsyncSQL(RolUser rolUser)
         {
             try
@@ -230,32 +256,6 @@ namespace Data
         }
 
 
-        ///<summary>
-        ///elimina un nuevo RolUser en la base de datos.
-        /// </summary>
-        /// <param name="id">Identificador unico del RolUser a eliminar</param>
-        /// <returns>True si la eliminacion fue exitosa, false en caso contrario</returns>
-
-        //Metodo Linq
-        public async Task<bool> DeleteAsync(int id)
-        {
-            try
-            {
-                var rolUser = await _context.Set<RolUser>().FindAsync(id);
-                if (rolUser == null)
-                    return false;
-
-                _context.Set<RolUser>().Remove(rolUser);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al eliminar el RolUser: {ex.Message}");
-                return false;
-            }
-        }
-
         //Metodo Sql
 
         public async Task<bool> DeleteAsyncSQL(int id)
@@ -279,7 +279,6 @@ namespace Data
                 return false;
             }
         }
-
     }
 }
 

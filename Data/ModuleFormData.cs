@@ -30,19 +30,12 @@ namespace Data
         /// <returns>lista de ModuleForm </returns>
 
         //Atributo Linq
-        public async Task<IEnumerable<ModuleForm>> GetAllModuleFormAsync()
+        public async Task<IEnumerable<ModuleForm>> GetAllModuleFormAsyncLinq()
         {
             return await _context.Set<ModuleForm>().ToListAsync();
         }
 
-        //Atributo SQL        
-        public async Task<IEnumerable<ModuleForm>> GetAllAsyncSQL()
-        {
-            string query = "SELECT * FROM ModuleForm";
-            return (IEnumerable<ModuleForm>)await _context.QueryAsync<IEnumerable<ModuleForm>>(query);
-        }
-
-        public async Task<ModuleForm?> GetByIdAsync(int id)
+        public async Task<ModuleForm?> GetByIdAsyncLinq(int id)
         {
             try
             {
@@ -60,7 +53,83 @@ namespace Data
         ///</summary>
         ///<param name="moduleForm">instancia del ModuleForm a crear </param>
         ///<returns> El ModuleForm creado.</returns>
+      
 
+
+        /// <summary>
+        /// Actualiza un ModuleForm existente en la base de datos
+        /// </summary>
+        /// <param name="moduleForm">objeto con la informacion actualizada </param>
+        /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
+
+
+        public async Task<bool> UpdateAsyncLinq(ModuleForm moduleForm)
+        {
+            try
+            {
+                _context.Set<ModuleForm>().Update(moduleForm);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el moduloForm: {ex.Message}");
+                return false;
+            }
+        }
+        ///<summary>
+        ///Elimina un ModuleForm de la base de datos
+        /// </summary>
+        /// <param name="id">Identificador unico del ModuleForm a eliminar</param>
+        /// <returns>true si la eliminacion fue exitosa, false en caso contrario</returns>
+
+        //Metodo Linq
+        public async Task<bool> DeleteAsyncLinq(int id)
+        {
+            try
+            {
+                var moduleForm = await _context.Set<ModuleForm>().FindAsync(id);
+                if (moduleForm == null)
+                    return false;
+
+                _context.Set<ModuleForm>().Remove(moduleForm);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar el ModuleForm: {ex.Message}");
+                return false;
+            }
+        }
+
+
+        //SQL
+
+        //Metodo SQL    
+        public async Task<IEnumerable<ModuleForm>> GetAllAsyncSQL()
+        {
+            string query = "SELECT * FROM moduleForm";
+            return (IEnumerable<ModuleForm>)await _context.QueryAsync<IEnumerable<ModuleForm>>(query);
+        }
+
+        //Metodo SQL    
+        public async Task<ModuleForm?> GetByModuleIdAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"SELECT * FROM public.moduleform WHERE id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<ModuleForm>(query, new { Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuario con el Id {id}", id);
+                throw;
+            }
+        }
+
+        //Metodo SQL
         public async Task<ModuleForm> CreateModuleFormAsyncSql(ModuleForm moduleForm)
         {
             try
@@ -88,81 +157,25 @@ namespace Data
         }
 
         //Metodo SQL
-        public async Task<ModuleForm> CreateAsyncSQL(ModuleForm moduleForm)
-        {
-            try
-            {
-                // SQL para insertar en la tabla ModuleForm
-                var sql = "INSERT INTO ModuleForm (ModuleId, FormId) " +  // Asegúrate de ajustar los campos a tu tabla
-                          "VALUES (@moduleId, @formId);" +
-                          "SELECT SCOPE_IDENTITY();"; // Esto devuelve el Id del registro insertado
-
-                // Definir los parámetros para la consulta SQL
-                var parametros = new SqlParameter[]
-                {
-            new SqlParameter("@moduleId", moduleForm.moduleid),  // Cambia Field1, Field2, Field3 por los nombres reales
-            new SqlParameter("@formId", moduleForm.formid),
-                };
-
-                // Ejecutar la consulta SQL y obtener el Id del nuevo registro
-                var result = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
-
-                // Asignar el Id devuelto al objeto moduleForm
-                moduleForm.id = Convert.ToInt32(result); // Asumiendo que SCOPE_IDENTITY devuelve un int
-                return moduleForm;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al crear el ModuleForm: {ex.Message}");
-                throw;
-            }
-        }
-
-
-
-        /// <summary>
-        /// Actualiza un ModuleForm existente en la base de datos
-        /// </summary>
-        /// <param name="moduleForm">objeto con la informacion actualizada </param>
-        /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
-
-
-        public async Task<bool> UpdateAsync(ModuleForm moduleForm)
-        {
-            try
-            {
-                _context.Set<ModuleForm>().Update(moduleForm);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al actualizar el moduloForm: {ex.Message}");
-                return false;
-            }
-        }
-
-        //Metodo SQL
         public async Task<bool> UpdateAsyncSQL(ModuleForm moduleForm)
         {
             try
             {
-                // SQL para actualizar el registro en la tabla ModuleForm
-                var sql = "UPDATE ModuleForm SET ModuleId = @moduleId, FormId = @formId " +
+                var sql = "UPDATE moduleform SET moduleid = @ModuleId, formid = @FormId " +
                           "WHERE Id = @id";
 
-                // Definir los parámetros para la consulta SQL
-                var parametros = new SqlParameter[]
+                var parameters = new
                 {
-            new SqlParameter("@moduleId", moduleForm.moduleid),  // Asignar el nuevo valor para ModuleId
-            new SqlParameter("@formId", moduleForm.formid),      // Asignar el nuevo valor para FormId
-            new SqlParameter("@id", moduleForm.id)             // Identificar el registro por su Id
+                    Id = moduleForm.id,
+                    ModuleId = moduleForm.moduleid,
+                    FormId = moduleForm.formid
                 };
 
                 // Ejecutar la consulta SQL
-                var result = await _context.Database.ExecuteSqlRawAsync(sql, parametros);
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
 
-                return result > 0;  // Retorna true si se actualizó al menos una fila
+                // Verificar si la actualización afectó alguna fila (es decir, si el module fue actualizado)
+                return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
             }
             catch (Exception ex)
             {
@@ -171,40 +184,13 @@ namespace Data
             }
         }
 
-        ///<summary>
-        ///Elimina un ModuleForm de la base de datos
-        /// </summary>
-        /// <param name="id">Identificador unico del ModuleForm a eliminar</param>
-        /// <returns>true si la eliminacion fue exitosa, false en caso contrario</returns>
-
-        //Metodo Linq
-        public async Task<bool> DeleteAsync(int id)
-        {
-            try
-            {
-                var moduleForm = await _context.Set<ModuleForm>().FindAsync(id);
-                if (moduleForm == null)
-                    return false;
-
-                _context.Set<ModuleForm>().Remove(moduleForm);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al eliminar el ModuleForm: {ex.Message}");
-                return false;
-            }
-        }
-
         //Metodo sql
-
         public async Task<bool> DeleteAsyncSQL(int id)
         {
             try
             {
                 // SQL para eliminar el registro en la tabla ModuleForm
-                var sql = "DELETE FROM ModuleForm WHERE Id = @id";
+                var sql = "DELETE FROM moduleform WHERE Id = @id";
 
                 // Definir el parámetro para la consulta SQL
                 var parametro = new SqlParameter("@id", id);
@@ -220,7 +206,6 @@ namespace Data
                 return false;
             }
         }
-
 
     }
 }

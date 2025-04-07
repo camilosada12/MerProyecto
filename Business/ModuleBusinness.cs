@@ -74,7 +74,7 @@ namespace Business
                 var Module = MapToEntity(ModuleDto);
 
                 var ModuleCreado = await _ModuleData.CreateModuleAsyncSQL(Module);
-                _logger.LogInformation("Module insertado con ID: {UserId}", ModuleCreado.id);
+                _logger.LogInformation("Module insertado con ID: {ModuleId}", ModuleCreado.id);
 
                 return MapToDTO(ModuleCreado);
             }
@@ -85,12 +85,12 @@ namespace Business
             }
         }
 
-        public async Task<ModuleDto> UpdateModuleAsync(int id, ModuleDto moduleDto)
+        public async Task<ModuleDto> UpdateModuleAsync(ModuleDto moduleDto)
         {
             try
             {
                 ValidateModule(moduleDto);
-                var existingModule = await _ModuleData.GetByIdAsync(id);
+                var existingModule = await _ModuleData.GetByModuleIdAsyncSQL(moduleDto.Id);
                 if (existingModule == null)
                 {
                     throw new EntityNotFoundException("Module", "No se encontró la relación Module");
@@ -98,10 +98,9 @@ namespace Business
 
                 // Convertir la fecha a UTC antes de actualizar
                 existingModule.name = moduleDto.Name;
-                existingModule.description = moduleDto.description;
-                existingModule.statu = moduleDto.statu;
+                existingModule.description = moduleDto.Description;
 
-                var success = await _ModuleData.UpdateModuleAsyncLinq(existingModule);
+                var success = await _ModuleData.UpdateAsyncSQL(existingModule);
 
                 if (!success)
                 {
@@ -131,6 +130,21 @@ namespace Business
             }
         }
 
+        public async Task<bool> DeleteLogicoModuleAsync(int id)
+        {
+            try
+            {
+                return await _ModuleData.DeleteLogicoModuleAsyncSQL(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar lógicamente el Form");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Form", ex);
+            }
+        }
+
+
+
         // Atributo para validar el DTO
         private void ValidateModule(ModuleDto ModuleDto)
         {
@@ -153,8 +167,7 @@ namespace Business
             {
                 Id = Module.id,
                 Name = Module.name,
-                description = Module.description,
-                statu = Module.statu
+                Description = Module.description,
             };
         }
 
@@ -165,8 +178,8 @@ namespace Business
             {
                 id = ModuleDto.Id,
                 name = ModuleDto.Name,
-                description = ModuleDto.description,
-                statu = ModuleDto.statu
+                description = ModuleDto.Description,
+                isdelete = false
             };
         }
 

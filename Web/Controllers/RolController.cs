@@ -106,45 +106,45 @@ namespace Web.Controllers
 
         public async Task<IActionResult> creadoRol([FromBody] RolDto RolDto)
         {
-            _logger.LogInformation("Recibiendo petición para crear usuario");
+            _logger.LogInformation("Recibiendo petición para crear Rol");
             try
             {
                 var createRol = await _RolBusiness.CreateRolAsync(RolDto);
-                _logger.LogInformation("Usuario creado con ID: {RolId}", createRol.Id);
+                _logger.LogInformation("Rol creado con ID: {RolId}", createRol.Id);
                 return CreatedAtAction(nameof(GetRolById), new { id = createRol.Id }, createRol);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear usuario");
+                _logger.LogError(ex, "Error al crear Rol");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(RolDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolAsync(int id, [FromBody] RolDto RolDto)
+        public async Task<IActionResult> UpdateRolAsync([FromBody] RolDto RolDto)
         {
             try
             {
-                var updatedRol = await _RolBusiness.UpdateRolAsync(id, RolDto);
+                var updatedRol = await _RolBusiness.UpdateRolAsync(RolDto);
                 return Ok(updatedRol);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar usuario con ID: {RolId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar Rol con ID: {RolId}", RolDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Usuario no encontrado con ID: {RolId}", id);
+                _logger.LogInformation(ex, "Rol no encontrado con ID: {RolId}", RolDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar usuario con ID: {RolId}", id);
+                _logger.LogError(ex, "Error al actualizar Rol con ID: {RolId}", RolDto.Id);
                 return StatusCode(500, new { message = ex.Message });
 
 
@@ -156,30 +156,64 @@ namespace Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        public async Task<IActionResult> DeleteRolAsync(int id)
         {
             try
             {
                 var result = await _RolBusiness.DeleteRolAsync(id);
                 if (!result)
                 {
-                    return NotFound(new { message = "Usuario no encontrado" });
+                    return NotFound(new { message = "Rol no encontrado" });
                 }
-                return NoContent();
+                return Ok(new { message = "Rol eliminado exitosamente" });
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al eliminar usuario con ID: {UserId}", id);
+                _logger.LogWarning(ex, "Validación fallida al eliminar Rol con ID: {RolId}", id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Usuario no encontrado con ID: {UserId}", id);
+                _logger.LogInformation(ex, "Rol no encontrado con ID: {RolId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar usuario con ID: {UserId}", id);
+                _logger.LogError(ex, "Error al eliminar Rol con ID: {RolId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("logico/{id}")]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicoRolAsync(int id)
+        {
+            try
+            {
+                var result = await _RolBusiness.DeleteLogicoRolAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Rol no encontrado o ya eliminado" });
+                }
+
+                return Ok(new { message = "Rol eliminado lógicamente exitosamente" });
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validación fallida al eliminar Rol con ID: {RolId}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Rol no encontrado con ID: {RolId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar Rol con ID: {RolId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

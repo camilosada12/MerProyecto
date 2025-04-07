@@ -1128,7 +1128,10 @@
           "Utilities": "1.0.0"
         },
         "runtime": {
-          "Business.dll": {}
+          "Business.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Data/1.0.0": {
@@ -1138,7 +1141,10 @@
           "Utilities": "1.0.0"
         },
         "runtime": {
-          "Data.dll": {}
+          "Data.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Entity/1.0.0": {
@@ -1148,12 +1154,18 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.3"
         },
         "runtime": {
-          "Entity.dll": {}
+          "Entity.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Utilities/1.0.0": {
         "runtime": {
-          "Utilities.dll": {}
+          "Utilities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

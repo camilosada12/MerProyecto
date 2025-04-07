@@ -7,8 +7,7 @@
         //public Rol Rol { get; set; }
         public int userid { get; set; }
         //public User User { get; set; }
-
-
+        public bool isdelete { get; set; } = false;
 
     }
 }

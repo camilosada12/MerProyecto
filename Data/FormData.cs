@@ -115,7 +115,7 @@ namespace Data
         //Atributo SQL
         public async Task<IEnumerable<Form>> GetAllFormAsyncSQL()
         {
-            string query = "SELECT * FROM form";
+            const string query = @"SELECT * FROM form WHERE isdelete = false";
             return await _context.QueryAsync<Form>(query);
         }
 
@@ -124,7 +124,7 @@ namespace Data
         {
             try
             {
-                string query = @"SELECT * FROM public.""form"" WHERE ""id"" = @Id";
+                string query = @"SELECT * FROM public.form WHERE id = @Id AND isdelete = false";
 
                 return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
             }
@@ -146,18 +146,19 @@ namespace Data
         {
             try
             {
-                // SQL para insertar en la tabla Users
-                const string query = @"INSERT INTO public.""form""(
-	                                ""name"", ""description"", ""datacreation"", ""statu"")
-	                                VALUES (@Name,@Description,@DataCreation, @Statu);";
+                // Forzar valor por defecto en la creación
+                form.isdelete = false;
 
-                // Ejecutar el comando SQL
+                const string query = @"INSERT INTO public.form(
+                name, description, isdelete)
+              VALUES (@Name, @Description, @IsDeleted)
+              RETURNING id;";
+
                 form.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
                 {
                     Name = form.name,
                     Description = form.description,
-                    DataCreation =form.datacreation,
-                    Statu = form.statu,
+                    IsDeleted = form.isdelete,
                 });
 
                 return form;
@@ -169,6 +170,7 @@ namespace Data
             }
         }
 
+
         /// <summary>
         /// Actualiza un formulario existente en la base de datos
         /// </summary>
@@ -176,35 +178,34 @@ namespace Data
         /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
 
         //Atributo SQL
-        ////public async Task<bool> UpdateFormAsyncSQL(Form form)
-        ////{
-        ////    try
-        ////    {
-        ////        // SQL para insertar en la tabla Users
-        ////        var sql = @"
-        ////            UPDATE public.""form""
-        ////                SET ""name""=@Name, ""description""=@Description
-        ////            WHERE ""id""= @Id;";
+        public async Task<bool> UpdateFormAsyncSQL(Form form)
+        {
+            try
+            {
+                var sql = @"
+                UPDATE public.form SET 
+                name = @Name,
+                description = @Description
+                WHERE id = @Id;";
 
+                var parameters = new
+                {
+                    Id = form.id,
+                    Name = form.name,
+                    Description = form.description
+                };
 
+                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
 
-        ////        int rowsAffected = await _context.QuerySingleAsync<int>(sql, new
-        ////        {
-        ////            form.id,
-        ////            form.name,
-        ////            form.description
-        ////        });
-        ////        // Ejecutar la consulta SQL
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el Form: {ex.Message}");
+                return false;
+            }
+        }
 
-        ////        // Verificar si la actualización afectó alguna fila (es decir, si el Form fue actualizado)
-        ////        return rowsAffected > 0;  // Si rowsAffected > 0, la actualización fue exitosa
-        ////    }
-        ////    catch (Exception ex)
-        ////    {
-        ////        _logger.LogError($"Error al actualizar el Form: {ex.Message}");
-        ////        return false;
-        ////    }
-        ////}
 
         ///<summary>
         ///Elimina un formulario de la base de datos
@@ -228,6 +229,23 @@ namespace Data
                 return false;
             }
         }
+
+        public async Task<bool> DeleteLogicoAsyncSQL(int id)
+        {
+            try
+            {
+                var sql = "UPDATE form SET isdelete = TRUE WHERE id = @Id";
+                var parametro = new NpgsqlParameter("@Id", id);
+                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
+                return false;
+            }
+        }
+
 
     }
 }
