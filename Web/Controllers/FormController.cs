@@ -34,6 +34,41 @@ namespace Web.Controllers
             _logger = logger;
         }
 
+        [HttpPost("SetProvider")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public IActionResult SetDatabaseProvider([FromBody] string provider)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(provider))
+                {
+                    return BadRequest(new { message = "El nombre del proveedor no puede estar vacío" });
+                }
+
+                string proveedorNormalizado = provider.ToLower();
+                if (proveedorNormalizado != "postgresql" &&
+                    proveedorNormalizado != "mysql" &&
+                    proveedorNormalizado != "sqlserver")
+                {
+                    return BadRequest(new { message = $"El proveedor '{provider}' no está soportado. Use 'postgresql', 'mysql', o 'sqlserver'." });
+                }
+
+                _FormBusiness.SetDatabaseProvider(proveedorNormalizado);
+                return Ok(new { message = $"Proveedor cambiado exitosamente a {provider}" });
+            }
+            catch (NotSupportedException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cambiar el proveedor de base de datos a {Provider}", provider);
+                return StatusCode(500, new { message = "Ocurrió un error al cambiar el proveedor de base de datos." });
+            }
+        }
+
         /// <summary>
         /// Obtener todos los forms del sistema
         /// </summary>
@@ -215,7 +250,6 @@ namespace Web.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
-
 
     }
 }

@@ -1,165 +1,176 @@
-﻿using Data;
-using Entity.DTOs;
+﻿using Entity.DTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
-
 using Utilities.Exceptions;
+using static Data.FormData;
 
 namespace Business
 {
     /// <summary>
-    /// clase de negocio encargada de la logica relacionada con los formulario del sistema
+    /// Clase de negocio encargada de la lógica relacionada con los formularios del sistema
     /// </summary>
     public class FormBusiness
     {
-        private readonly FormData _formData;
+        private readonly FormDataFactory _formDataFactory;
         private readonly ILogger<FormBusiness> _logger;
 
-        public FormBusiness(FormData formData, ILogger<FormBusiness> logger)
+        public FormBusiness(
+            FormDataFactory formDataFactory,
+            ILogger<FormBusiness> logger)
         {
-            _formData = formData;
+            _formDataFactory = formDataFactory;
             _logger = logger;
         }
 
-        //Atributo para obtener todos los Formulario como DTOs
+        // Método para cambiar el proveedor de base de datos
+        public void SetDatabaseProvider(string provider)
+        {
+            _formDataFactory.SetCurrentProvider(provider);
+        }
+
+        // Obtener todos los formularios como DTOs
         public async Task<IEnumerable<FormDto>> GetAllformAsync()
         {
+            var formData = _formDataFactory.CreateFormData();
             try
             {
-                var form = await _formData.GetAllFormAsyncSQL();
-                var formDTO = MapToDTOList(form);
-                return formDTO;
+                var forms = await formData.GetAllFormAsyncSQL();
+                return MapToDTOList(forms);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todos los form");
-                throw new ExternalServiceException("base de datos", "Error al recuperar la lista de form", ex);
+                _logger.LogError(ex, "Error al obtener todos los formularios");
+                throw new ExternalServiceException("base de datos", "Error al recuperar la lista de formularios", ex);
             }
         }
 
-        //Atributo para obtener un formulario por Id como DTO
+        // Obtener un formulario por Id como DTO
         public async Task<FormDto> GetFormByAsync(int id)
         {
             if (id == 0)
             {
-                _logger.LogWarning("se intento obtener un Formulario con Id invalido: {FormID}", id);
-                throw new Utilities.Exceptions.ValidationException("id", "El Id del Formulario debe ser mayor que cero");
+                _logger.LogWarning("Se intentó obtener un formulario con Id inválido: {FormID}", id);
+                throw new ValidationException("id", "El Id del formulario debe ser mayor que cero");
             }
+
+            var formData = _formDataFactory.CreateFormData();
             try
             {
-                var Form = await _formData.GetByFormIdAsyncSql(id);
-                if (Form == null)
+                var form = await formData.GetByFormIdAsyncSql(id);
+                if (form == null)
                 {
-                    _logger.LogInformation("No se encontro ningun formulario con ID: {FormID}", id);
-                    throw new EntityNotFoundException("Formulariol", id);
+                    _logger.LogInformation("No se encontró ningún formulario con ID: {FormID}", id);
+                    throw new EntityNotFoundException("Formulario", id);
                 }
-                return MapToDTO(Form); 
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el Formulario con ID: {FormId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al recuperar el Formulario con ID {id}", ex);
-            }
-        }
-
-        //Atributo para crear un Formulario desde un DTO
-        public async Task<FormDto> CreateFormAsync(FormDto formDto)
-        {
-            try
-            {
-                ValidateForm(formDto);
-
-                var Form = MapToEntity(formDto);
-
-                // Corrección: Asegurar que se retorna el ID correcto
-                var FormCreado = await _formData.CreateAsyncSQL(Form);
-                _logger.LogInformation("Usuario insertado con ID: {formId}", FormCreado.id);
-
-                return MapToDTO(FormCreado);
+                return MapToDTO(form);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear nuevo Rol : {formNombre}", formDto?.Name ?? "null");
-                throw new ExternalServiceException("base de datos ", "Error al crear el Rol", ex);
+                _logger.LogError(ex, "Error al obtener el formulario con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", $"Error al recuperar el formulario con ID {id}", ex);
             }
         }
 
+        // Crear un nuevo formulario desde un DTO
+        public async Task<FormDto> CreateFormAsync(FormDto formDto)
+        {
+            var formData = _formDataFactory.CreateFormData();
+            try
+            {
+                ValidateForm(formDto);
+                var form = MapToEntity(formDto);
+
+                var formCreado = await formData.CreateAsyncSQL(form);
+                _logger.LogInformation("Formulario creado con ID: {formId}", formCreado.id);
+
+                return MapToDTO(formCreado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear nuevo formulario: {formNombre}", formDto?.Name ?? "null");
+                throw new ExternalServiceException("base de datos", "Error al crear el formulario", ex);
+            }
+        }
+
+        // Actualizar un formulario existente
         public async Task<FormDto> UpdateFormAsync(FormDto formDto)
         {
+            var formData = _formDataFactory.CreateFormData();
             try
             {
                 ValidateForm(formDto);
 
-                var existingForm = await _formData.GetByFormIdAsyncSql(formDto.Id);
+                var existingForm = await formData.GetByFormIdAsyncSql(formDto.Id);
                 if (existingForm == null)
                 {
-                    throw new EntityNotFoundException("Form", $"No se encontró la relación con {formDto.Id}");
+                    throw new EntityNotFoundException("Form", $"No se encontró el formulario con ID {formDto.Id}");
                 }
 
-                // Convertir la fecha a UTC antes de actualizar
                 existingForm.name = formDto.Name;
                 existingForm.description = formDto.Description;
 
-                var success = await _formData.UpdateFormAsyncSQL(existingForm);
+                var success = await formData.UpdateFormAsyncSQL(existingForm);
 
                 if (!success)
                 {
-                    throw new Exception("No se pudo actualizar la relación Form.");
+                    throw new Exception("No se pudo actualizar el formulario.");
                 }
 
                 return MapToDTO(existingForm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la relación Form");
-                throw new ExternalServiceException("Base de datos", "Error al actualizar la relación Form", ex);
+                _logger.LogError(ex, "Error al actualizar el formulario");
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el formulario", ex);
             }
         }
 
-        // Método para eliminar una relación Form de manera lógica
+        // Eliminar un formulario físicamente
         public async Task<bool> DeleteFormAsync(int id)
         {
+            var formData = _formDataFactory.CreateFormData();
             try
             {
-                return await _formData.DeleteAsyncSQL(id);
+                return await formData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar lógicamente la relación Form");
-                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Form", ex);
+                _logger.LogError(ex, "Error al eliminar el formulario");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el formulario", ex);
             }
         }
 
+        // Eliminar un formulario lógicamente
         public async Task<bool> DeleteLogicoFormAsync(int id)
         {
+            var formData = _formDataFactory.CreateFormData();
             try
             {
-                return await _formData.DeleteLogicoAsyncSQL(id);
+                return await formData.DeleteLogicoAsyncSQL(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar lógicamente el Form");
-                throw new ExternalServiceException("Base de datos", "Error al eliminar la relación Form", ex);
+                _logger.LogError(ex, "Error al eliminar lógicamente el formulario");
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el formulario", ex);
             }
         }
 
-
-        //Atributo para validar el DTO
-        private void ValidateForm(FormDto FormDto)
+        // Validar el DTO del formulario
+        private void ValidateForm(FormDto formDto)
         {
-            if (FormDto == null)
+            if (formDto == null)
             {
-                throw new Utilities.Exceptions.ValidationException("El objeto Form no puede ser nulo");
+                throw new ValidationException("El objeto Form no puede ser nulo");
             }
 
-            if (string.IsNullOrWhiteSpace(FormDto.Name))
+            if (string.IsNullOrWhiteSpace(formDto.Name))
             {
-                _logger.LogWarning("Se intentó crear/actualizar un Form con Name vacío");
-                throw new Utilities.Exceptions.ValidationException("Name", "El Name del Form es obligatorio");
+                _logger.LogWarning("Se intentó crear/actualizar un formulario con Name vacío");
+                throw new ValidationException("Name", "El nombre del formulario es obligatorio");
             }
         }
 
-        //Atributo para Mapear de Form a FormDTO
+        // Mapear de Form a FormDTO
         private FormDto MapToDTO(Form form)
         {
             return new FormDto
@@ -170,7 +181,7 @@ namespace Business
             };
         }
 
-        // Atributo para mapear de FormDTO a Form
+        // Mapear de FormDTO a Form
         private Form MapToEntity(FormDto formDto)
         {
             return new Form
@@ -182,15 +193,10 @@ namespace Business
             };
         }
 
-        // Atributo para mapear una lista de Form a una lista de FormDTO
-        private IEnumerable<FormDto> MapToDTOList(IEnumerable<Form> Formes)
+        // Mapear una lista de Form a una lista de FormDTO
+        private IEnumerable<FormDto> MapToDTOList(IEnumerable<Form> forms)
         {
-            var FormDto = new List<FormDto>();
-            foreach (var Forme in Formes)
-            {
-                FormDto.Add(MapToDTO(Forme));
-            }
-            return FormDto;
+            return forms.Select(form => MapToDTO(form)).ToList();
         }
     }
 }

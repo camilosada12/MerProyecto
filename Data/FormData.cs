@@ -1,15 +1,10 @@
-﻿
-
-using Dapper;
-using System.Data;
-using Entity.Contexts;
+﻿using Entity.Contexts;
 using Entity.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MySqlConnector;
 using Npgsql;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Entity.DTOs;
 
 namespace Data
 {
@@ -109,141 +104,405 @@ namespace Data
             }
         }
 
+        public interface IFormData
+        {
+            Task<IEnumerable<Form>> GetAllFormAsyncSQL();
+            Task<Form> GetByFormIdAsyncSql(int id);
+            Task<Form> CreateAsyncSQL(Form form);
+            Task<bool> UpdateFormAsyncSQL(Form form);
+            Task<bool> DeleteAsyncSQL(int id);
+            Task<bool> DeleteLogicoAsyncSQL(int id);
+        }
 
         //SQL
-
-        //Atributo SQL
-        public async Task<IEnumerable<Form>> GetAllFormAsyncSQL()
+        public class FormDataPostgreSQL : IFormData
         {
-            const string query = @"SELECT * FROM form WHERE isdelete = false";
-            return await _context.QueryAsync<Form>(query);
-        }
+            private readonly ApplicationDbContext _context;
+            private readonly ILogger<FormDataPostgreSQL> _logger;
 
-        //Atributo SQL
-        public async Task<Form?> GetByFormIdAsyncSql(int id)
-        {
-            try
+            public FormDataPostgreSQL(ApplicationDbContext context, ILogger<FormDataPostgreSQL> logger)
             {
-                string query = @"SELECT * FROM public.form WHERE id = @Id AND isdelete = false";
-
-                return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
+                _context = context;
+                _logger = logger;
             }
-            catch (Exception ex)
+
+            //Atributo SQL
+            public async Task<IEnumerable<Form>> GetAllFormAsyncSQL()
             {
-                _logger.LogError(ex, "Error al obtener el usuario con el Id {FormId}", id);
-                throw;
+                const string query = @"SELECT * FROM form WHERE isdelete = false";
+                return await _context.QueryAsync<Form>(query);
             }
-        }
 
-        ///<summary>
-        ///crea un nuevo formulario en la base de datos
-        ///</summary>
-        ///<param name="form">instancia del formulario a crear </param>
-        ///<returns> El formulario creado.</returns>
-
-        //Atributo SQL
-        public async Task<Form> CreateAsyncSQL(Form form)
-        {
-            try
+            //Atributo SQL
+            public async Task<Form?> GetByFormIdAsyncSql(int id)
             {
-                // Forzar valor por defecto en la creación
-                form.isdelete = false;
-
-                const string query = @"INSERT INTO public.form(
-                name, description, isdelete)
-              VALUES (@Name, @Description, @IsDeleted)
-              RETURNING id;";
-
-                form.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                try
                 {
-                    Name = form.name,
-                    Description = form.description,
-                    IsDeleted = form.isdelete,
-                });
+                    string query = @"SELECT * FROM public.form WHERE id = @Id AND isdelete = false";
 
-                return form;
+                    return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al obtener el usuario con el Id {FormId}", id);
+                    throw;
+                }
             }
-            catch (Exception ex)
+
+            ///<summary>
+            ///crea un nuevo formulario en la base de datos
+            ///</summary>
+            ///<param name="form">instancia del formulario a crear </param>
+            ///<returns> El formulario creado.</returns>
+
+            //Atributo SQL
+            public async Task<Form> CreateAsyncSQL(Form form)
             {
-                _logger.LogError($"Error al crear el Form: {ex.Message}");
-                throw;
+                try
+                {
+                    // Forzar valor por defecto en la creación
+                    form.isdelete = false;
+
+                    const string query = @"INSERT INTO public.form(
+                name, description, isdelete)
+                VALUES (@Name, @Description, @IsDeleted)
+                RETURNING id;";
+
+                    form.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                    {
+                        Name = form.name,
+                        Description = form.description,
+                        IsDeleted = form.isdelete,
+                    });
+
+                    return form;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error al crear el Form: {ex.Message}");
+                    throw;
+                }
             }
-        }
 
 
-        /// <summary>
-        /// Actualiza un formulario existente en la base de datos
-        /// </summary>
-        /// <param name="form">objeto con la informacion actualizada </param>
-        /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
+            /// <summary>
+            /// Actualiza un formulario existente en la base de datos
+            /// </summary>
+            /// <param name="form">objeto con la informacion actualizada </param>
+            /// <returns>True si la operaccion fue exitosa, false en caso contrario.</returns>
 
-        //Atributo SQL
-        public async Task<bool> UpdateFormAsyncSQL(Form form)
-        {
-            try
+            //Atributo SQL
+            public async Task<bool> UpdateFormAsyncSQL(Form form)
             {
-                var sql = @"
+                try
+                {
+                    var sql = @"
                 UPDATE public.form SET 
                 name = @Name,
                 description = @Description
                 WHERE id = @Id;";
 
-                var parameters = new
+                    var parameters = new
+                    {
+                        Id = form.id,
+                        Name = form.name,
+                        Description = form.description
+                    };
+
+                    int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
                 {
-                    Id = form.id,
-                    Name = form.name,
-                    Description = form.description
-                };
-
-                int rowsAffected = await _context.ExecuteAsync(sql, parameters);
-
-                return rowsAffected > 0;
+                    _logger.LogError($"Error al actualizar el Form: {ex.Message}");
+                    return false;
+                }
             }
-            catch (Exception ex)
+
+            ///<summary>
+            ///Elimina un formulario de la base de datos
+            /// </summary>
+            /// <param name="id">Identificador unico del formulario a eliminar</param>
+            /// <returns>true si la eliminacion fue exitosa, false en caso contrario</returns>
+
+            //Atributo SQL
+            public async Task<bool> DeleteAsyncSQL(int id)
             {
-                _logger.LogError($"Error al actualizar el Form: {ex.Message}");
-                return false;
+                try
+                {
+                    var sql = "DELETE FROM form WHERE id = @Id";
+                    var parametro = new NpgsqlParameter("@Id", id);
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error al eliminar el usuario: {ex.Message}");
+                    return false;
+                }
             }
+
+            public async Task<bool> DeleteLogicoAsyncSQL(int id)
+            {
+                try
+                {
+                    var sql = "UPDATE form SET isdelete = TRUE WHERE id = @Id";
+                    var parametro = new NpgsqlParameter("@Id", id);
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
+                    return false;
+                }
+            }
+
         }
 
-
-        ///<summary>
-        ///Elimina un formulario de la base de datos
-        /// </summary>
-        /// <param name="id">Identificador unico del formulario a eliminar</param>
-        /// <returns>true si la eliminacion fue exitosa, false en caso contrario</returns>
-
-        //Atributo SQL
-        public async Task<bool> DeleteAsyncSQL(int id)
+        public class FormDataMysqlServer : IFormData
         {
-            try
+            private readonly ApplicationDbContext _context;
+            private readonly ILogger<FormDataMysqlServer> _logger;
+
+            public FormDataMysqlServer(ApplicationDbContext context, ILogger<FormDataMysqlServer> logger)
             {
-                var sql = "DELETE FROM form WHERE id = @Id";
-                var parametro = new NpgsqlParameter("@Id", id);
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
-                return rowsAffected > 0;
+                _context = context;
+                _logger = logger;
             }
-            catch (Exception ex)
+
+            //Atributo SQL Server
+            public async Task<IEnumerable<Form>> GetAllFormAsyncSQL()
             {
-                _logger.LogError($"Error al eliminar el usuario: {ex.Message}");
-                return false;
+                const string query = @"SELECT * FROM form WHERE isdelete = 0";
+                return await _context.QueryAsync<Form>(query);
             }
+
+            //Atributo SQL Server
+            public async Task<Form?> GetByFormIdAsyncSql(int id)
+            {
+                try
+                {
+                    string query = @"SELECT * FROM form WHERE id = @Id AND isdelete = 0";
+                    return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al obtener el formulario con el Id {FormId}", id);
+                    throw;
+                }
+            }
+
+            //Atributo SQL Server
+            public async Task<Form> CreateAsyncSQL(Form form)
+            {
+                try
+                {
+                    // Forzar valor por defecto en la creación
+                    form.isdelete = false;
+                    const string query = @"INSERT INTO form(
+                    name, description, isdelete)
+                    OUTPUT INSERTED.id
+                    VALUES (@Name, @Description, @IsDeleted)";
+
+                    form.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                    {
+                        Name = form.name,
+                        Description = form.description,
+                        IsDeleted = form.isdelete ? 1 : 0, // SQL Server usa 0/1 en lugar de false/true
+                    });
+                    return form;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al crear el Form: {ex.Message}");
+                    throw;
+                }
+            }
+
+            //Atributo SQL Server
+            public async Task<bool> UpdateFormAsyncSQL(Form form)
+            {
+                try
+                {
+                    var sql = @"
+                    UPDATE form SET 
+                    name = @Name,
+                    description = @Description
+                    WHERE id = @Id";
+                    var parameters = new
+                    {
+                        Id = form.id,
+                        Name = form.name,
+                        Description = form.description
+                    };
+                    int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al actualizar el Form: {ex.Message}");
+                    return false;
+                }
+            }
+
+            //Atributo SQL Server
+            public async Task<bool> DeleteAsyncSQL(int id)
+            {
+                try
+                {
+                    var sql = "DELETE FROM form WHERE id = @Id";
+                    var parameter = new SqlParameter("@Id", id);
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parameter);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al eliminar el formulario: {ex.Message}");
+                    return false;
+                }
+            }
+
+            //Atributo SQL Server
+            public async Task<bool> DeleteLogicoAsyncSQL(int id)
+            {
+                try
+                {
+                    var sql = "UPDATE form SET isdelete = 1 WHERE id = @Id";
+                    var parameter = new SqlParameter("@Id", id);
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parameter);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al realizar delete lógico del form: {ex.Message}");
+                    return false;
+                }
+            }
+
         }
 
-        public async Task<bool> DeleteLogicoAsyncSQL(int id)
+        public class FormDataMysql : IFormData
         {
-            try
+            private readonly ApplicationDbContext _context;
+            private readonly ILogger<FormDataMysql> _logger;
+
+            public FormDataMysql(ApplicationDbContext context, ILogger<FormDataMysql> logger)
             {
-                var sql = "UPDATE form SET isdelete = TRUE WHERE id = @Id";
-                var parametro = new NpgsqlParameter("@Id", id);
-                var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parametro);
-                return rowsAffected > 0;
+                _context = context;
+                _logger = logger;
             }
-            catch (Exception ex)
+
+            //Atributo MySQL
+            public async Task<IEnumerable<Form>> GetAllFormAsyncSQL()
             {
-                _logger.LogError($"Error al realizar delete lógico del form: {ex.Message}");
-                return false;
+                const string query = @"SELECT * FROM form WHERE isdelete = 0";
+                return await _context.QueryAsync<Form>(query);
             }
+
+            //Atributo MySQL
+            public async Task<Form?> GetByFormIdAsyncSql(int id)
+            {
+                try
+                {
+                    string query = @"SELECT * FROM form WHERE id = @Id AND isdelete = 0";
+                    return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al obtener el formulario con el Id {FormId}", id);
+                    throw;
+                }
+            }
+
+            //Atributo MySQL
+            public async Task<Form> CreateAsyncSQL(Form form)
+            {
+                try
+                {
+                    // Forzar valor por defecto en la creación
+                    form.isdelete = false;
+                    const string query = @"INSERT INTO form(
+                    name, description, isdelete)
+                    VALUES (@Name, @Description, @IsDeleted);
+                    SELECT LAST_INSERT_ID();";
+
+                    form.id = await _context.QueryFirstOrDefaultAsync<int>(query, new
+                    {
+                        Name = form.name,
+                        Description = form.description,
+                        IsDeleted = form.isdelete ? 1 : 0, // MySQL también usa 0/1 para booleanos
+                    });
+                    return form;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al crear el Form: {ex.Message}");
+                    throw;
+                }
+            }
+
+            //Atributo MySQL
+            public async Task<bool> UpdateFormAsyncSQL(Form form)
+            {
+                try
+                {
+                    var sql = @"
+                    UPDATE form SET 
+                    name = @Name,
+                    description = @Description
+                    WHERE id = @Id";
+                    var parameters = new
+                    {
+                        Id = form.id,
+                        Name = form.name,
+                        Description = form.description
+                    };
+                    int rowsAffected = await _context.ExecuteAsync(sql, parameters);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al actualizar el Form: {ex.Message}");
+                    return false;
+                }
+            }
+
+            //Atributo MySQL
+            public async Task<bool> DeleteAsyncSQL(int id)
+            {
+                try
+                {
+                    var sql = "DELETE FROM form WHERE id = @Id";
+                    var parameter = new MySqlParameter("@Id", id); // Cambiado a MySqlParameter
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parameter);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al eliminar el formulario: {ex.Message}");
+                    return false;
+                }
+            }
+
+            //Atributo MySQL
+            public async Task<bool> DeleteLogicoAsyncSQL(int id)
+            {
+                try
+                {
+                    var sql = "UPDATE form SET isdelete = 1 WHERE id = @Id";
+                    var parameter = new MySqlParameter("@Id", id); // Cambiado a MySqlParameter
+                    var rowsAffected = await _context.Database.ExecuteSqlRawAsync(sql, parameter);
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al realizar delete lógico del form: {ex.Message}");
+                    return false;
+                }
+            }
+
         }
 
 

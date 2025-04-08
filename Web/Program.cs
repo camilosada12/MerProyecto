@@ -21,6 +21,7 @@ builder.Services.AddScoped<UserBusiness>();
 
 builder.Services.AddScoped<FormData>();
 builder.Services.AddScoped<FormBusiness>();
+builder.Services.AddSingleton<FormDataFactory>();
 
 builder.Services.AddScoped<ModuleData>();
 builder.Services.AddScoped<ModuleBusinness>();
@@ -45,8 +46,10 @@ builder.Services.AddScoped<RolFormPermissionData>();
 builder.Services.AddScoped<RolFormPermissionBusiness>();
 
 
+
 var OrigenesPermitidos = builder.Configuration.GetValue<string>("OrígenesPermitidos");
 Console.WriteLine($"OrígenesPermitidos: {OrigenesPermitidos}");
+
 
 
 builder.Services.AddCors(opciones =>
@@ -57,10 +60,32 @@ builder.Services.AddCors(opciones =>
     });
 });
 
-// dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 
-builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
-opciones.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Agregar la inyección de los contextos y factories
+builder.Services.AddDbContextFactory<ApplicationDbContext>((provider, options) =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    string providerType = config.GetValue<string>("DatabaseProvider");
+
+    switch (providerType.ToLower())
+    {
+        case "postgresql":
+            options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+            break;
+        case "mysql":
+            options.UseMySql(config.GetConnectionString("MySqlConnection"),
+                ServerVersion.AutoDetect(config.GetConnectionString("MySqlConnection")));
+            break;
+        case "sqlserver":
+            options.UseSqlServer(config.GetConnectionString("DefaultConnectionServer"));
+            break;
+        default:
+            options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+            break;
+    }
+});
+
 
 
 

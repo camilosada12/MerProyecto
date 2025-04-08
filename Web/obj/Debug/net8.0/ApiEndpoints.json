@@ -227,6 +227,40 @@
     ]
   },
   {
+    "ContainingType": "Web.Controllers.FormController",
+    "Method": "SetDatabaseProvider",
+    "RelativePath": "api/Form/SetProvider",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "provider",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
     "ContainingType": "Web.ContModulelers.ModuleController",
     "Method": "GetAllForms",
     "RelativePath": "api/Module",
